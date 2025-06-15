@@ -1,0 +1,33 @@
+// Generated file. Do not edit.
+// Generated on 2025-05-29 01:55:51.859387
+
+const String dSvgsLocation = 'assets/svgs/Location.svg';
+const String dSvgsAppleCalendar = 'assets/svgs/apple_calendar.svg';
+const String dSvgsAppleLogin = 'assets/svgs/apple_login.svg';
+const String dSvgsBackIcon = 'assets/svgs/back_icon.svg';
+const String dSvgsBell = 'assets/svgs/bell.svg';
+const String dSvgsBusinessCard = 'assets/svgs/business_card.svg';
+const String dSvgsCalendarMenu = 'assets/svgs/calendar_menu.svg';
+const String dSvgsCalenderTime = 'assets/svgs/calenderTime.svg';
+const String dSvgsCall = 'assets/svgs/call.svg';
+const String dSvgsCallBlack = 'assets/svgs/call_black.svg';
+const String dSvgsCheckCircle = 'assets/svgs/checkCircle.svg';
+const String dSvgsCheckedVerified = 'assets/svgs/checked_verified.svg';
+const String dSvgsCheckmarkDateCalendarBlackIcon = 'assets/svgs/checkmark_date_calendar_black_icon.svg';
+const String dSvgsExpierence = 'assets/svgs/expierence.svg';
+const String dSvgsGoogleCalendar = 'assets/svgs/google_calendar.svg';
+const String dSvgsGoogleLogin = 'assets/svgs/google_login.svg';
+const String dSvgsHomeMenu = 'assets/svgs/home_menu.svg';
+const String dSvgsMail = 'assets/svgs/mail.svg';
+const String dSvgsMessage = 'assets/svgs/message.svg';
+const String dSvgsMessageMenu = 'assets/svgs/message_menu.svg';
+const String dSvgsMore = 'assets/svgs/more.svg';
+const String dSvgsPaperclip = 'assets/svgs/paperclip.svg';
+const String dSvgsRemoveDateCalendarBlackIcon = 'assets/svgs/remove_date_calendar_black_icon.svg';
+const String dSvgsSearch = 'assets/svgs/search.svg';
+const String dSvgsStar = 'assets/svgs/star.svg';
+const String dSvgsTeamManagement = 'assets/svgs/team_management.svg';
+const String dSvgsUserMenu = 'assets/svgs/user_menu.svg';
+const String dSvgsVerifyed = 'assets/svgs/verifyed.svg';
+const String dSvgsWarning = 'assets/svgs/warning.svg';
+const String dSvgsWebsite = 'assets/svgs/website.svg';
