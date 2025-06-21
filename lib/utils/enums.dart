@@ -63,4 +63,110 @@ extension TrackerApplicationTypeExtension on TrackerApplicationType {
         return 'CLRA Amendment';
     }
   }
+
+  // toBackend
+//   CLRA_SURRENDER = "clra_surrender",
+  String toBackend() {
+    switch (this) {
+      case TrackerApplicationType.bocw:
+        return 'bocw';
+      case TrackerApplicationType.clraNew:
+        return 'clra_new';
+      case TrackerApplicationType.clraRenewal:
+        return 'clra_ren';
+      case TrackerApplicationType.clraAmendment:
+        return 'clra_amend';
+    }
+  }
+}
+
+enum TrackerFilesType {
+  form5,
+  workOrder,
+  securityDepositeChalan,
+  oldLicenceNumber,
+  gstCertificate,
+  authorityLetterDulySigned,
+  ownerAadharCard,
+  authorizePersonAadharCard,
+  paymentProof,
+  approvedApplication,
+}
+
+extension TrackerFilesTypeExtension on TrackerFilesType {
+  String get displayName {
+    switch (this) {
+      case TrackerFilesType.form5:
+        return 'Form 5';
+      case TrackerFilesType.workOrder:
+        return 'Work Order';
+      case TrackerFilesType.securityDepositeChalan:
+        return 'Security Deposit Chalan';
+      case TrackerFilesType.oldLicenceNumber:
+        return 'Old Licence Number';
+      case TrackerFilesType.gstCertificate:
+        return 'GST Certificate';
+      case TrackerFilesType.authorityLetterDulySigned:
+        return 'Authority Letter Duly Signed';
+      case TrackerFilesType.ownerAadharCard:
+        return 'Owner Aadhar Card';
+      case TrackerFilesType.authorizePersonAadharCard:
+        return 'Authorize Person Aadhar Card';
+      case TrackerFilesType.paymentProof:
+        return 'Payment Proof';
+      case TrackerFilesType.approvedApplication:
+        return 'Approved Application';
+    }
+  }
+}
+
+
+enum TrackerApplicationStatus {
+  contractorDocPending,
+  contractorDocPendingReview,
+  contractorDocRequested,
+  pending,
+  approved,
+  paymentPending,
+  paymentReceived,
+}
+
+extension TrackerApplicationStatusExtension on TrackerApplicationStatus {
+  String get displayName {
+    switch (this) {
+      case TrackerApplicationStatus.contractorDocPending:
+        return 'Contractor Doc Pending';
+      case TrackerApplicationStatus.contractorDocPendingReview:
+        return 'Contractor Doc Pending Review';
+      case TrackerApplicationStatus.contractorDocRequested:
+        return 'Contractor Doc Requested';
+      case TrackerApplicationStatus.pending:
+        return 'Pending';
+      case TrackerApplicationStatus.approved:
+        return 'Approved';
+      case TrackerApplicationStatus.paymentPending:
+        return 'Payment Pending';
+      case TrackerApplicationStatus.paymentReceived:
+        return 'Payment Received';
+    }
+  }
+
+  String toBackend() {
+    switch (this) {
+      case TrackerApplicationStatus.contractorDocPending:
+        return 'contractor_doc_pending';
+      case TrackerApplicationStatus.contractorDocPendingReview:
+        return 'contractor_doc_pending_review';
+      case TrackerApplicationStatus.contractorDocRequested:
+        return 'contractor_doc_requested';
+      case TrackerApplicationStatus.pending:
+        return 'pending';
+      case TrackerApplicationStatus.approved:
+        return 'approved';
+      case TrackerApplicationStatus.paymentPending:
+        return 'payment_pending';
+      case TrackerApplicationStatus.paymentReceived:
+        return 'payment_received';
+    }
+  }
 }

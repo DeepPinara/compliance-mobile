@@ -4,6 +4,7 @@ import 'package:compliancenavigator/data/clients/network/network_info.dart';
 import 'package:compliancenavigator/data/clients/storage/get_storage.dart';
 import 'package:compliancenavigator/data/clients/storage/storage_provider.dart';
 import 'package:compliancenavigator/data/services/backend/backend_api_service.dart';
+import 'package:compliancenavigator/data/services/file_upload_service/file_upload_service.dart';
 import 'package:compliancenavigator/data/services/navigation_service/navigation_import.dart';
 import 'package:compliancenavigator/data/services/network_service.dart';
 import 'package:compliancenavigator/data/services/storage_service.dart';
@@ -64,6 +65,14 @@ class DependencyInjection {
       fenix: true,
     );
 
+    // FileUploadService
+    Get.lazyPut<FileUploadService>(
+      () => FileUploadService(
+        backendApiClient: Get.find<BackendApiCallService>(),
+      ),
+      fenix: true,
+    );
+
     // Domain layer dependencies
 
     // auth Repository
@@ -109,6 +118,7 @@ class DependencyInjection {
       () => TrackerRepository(
         backendApiClient: Get.find<BackendApiCallService>(),
         networkService: Get.find<NetworkService>(),
+        fileUploadService: Get.find<FileUploadService>(),
       ),
       fenix: true,
     );

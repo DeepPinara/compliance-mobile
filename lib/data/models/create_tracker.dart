@@ -1,3 +1,4 @@
+import 'package:compliancenavigator/data/models/tracker_file.dart';
 import 'package:compliancenavigator/utils/enums.dart';
 
 class CreateTrackerResponse {
@@ -29,15 +30,15 @@ class CreateTrackerRequest {
   final String contactPerson;
   final String contactPersonEmail;
   final String contactPersonPhone;
-  final String? clraAmendStartDate;
-  final String? clraAmendEndDate;
-  final String? formFiveStartDate;
-  final String? formFiveEndDate;
+  final DateTime? clraAmendStartDate;
+  final DateTime? clraAmendEndDate;
+  final DateTime? formFiveStartDate;
+  final DateTime? formFiveEndDate;
   final int? clraAmendHeadCountNumber;
   final String? currentLicenceNumber;
   final String? ifpId;
   final String? ifpPassword;
-  final List<dynamic>? files;
+  final List<TrackerFile>? files;
 
   CreateTrackerRequest({
     required this.vendorCode,
@@ -60,24 +61,53 @@ class CreateTrackerRequest {
   });
 
   factory CreateTrackerRequest.fromJson(Map<String, dynamic> json) {
+    // Helper function to parse date strings into DateTime
+    DateTime? parseDate(dynamic dateValue) {
+      if (dateValue == null) return null;
+      if (dateValue is DateTime) return dateValue;
+      if (dateValue is String) return DateTime.tryParse(dateValue);
+      return null;
+    }
+
+    // Parse files if they exist
+    List<TrackerFile>? parseFiles(dynamic filesData) {
+      if (filesData == null) return null;
+      if (filesData is List) {
+        return filesData
+            .whereType<Map<String, dynamic>>()
+            .map((fileJson) => TrackerFile(
+                  fileFieldName: TrackerFilesType.values.firstWhere(
+                    (e) => e.toString().split('.').last == fileJson['fileFieldName'],
+                    orElse: () => TrackerFilesType.form5,
+                  ),
+                  fileKey: fileJson['fileKey'] as String,
+                ))
+            .toList();
+      }
+      return null;
+    }
+
     return CreateTrackerRequest(
       vendorCode: json['vendorCode'] as String,
       clientName: json['clientName'] as String,
       principalId: json['principalID'] as int,
-      applicationType: json['applicationType'] as TrackerApplicationType,
+      applicationType: TrackerApplicationType.values.firstWhere(
+        (e) => e.toString().split('.').last == json['applicationType'],
+        orElse: () => TrackerApplicationType.bocw,
+      ),
       noOfLabours: json['noOfLabours'] as int?,
       contactPerson: json['contactPerson'] as String,
       contactPersonEmail: json['contactPersonEmail'] as String,
       contactPersonPhone: json['contactPersonPhone'] as String,
-      clraAmendStartDate: json['clra_amend_startDate'] as String?,
-      clraAmendEndDate: json['clra_amend_endDate'] as String?,
-      formFiveStartDate: json['form_five_startDate'] as String?,
-      formFiveEndDate: json['form_five_endDate'] as String?,
+      clraAmendStartDate: parseDate(json['clra_amend_startDate']),
+      clraAmendEndDate: parseDate(json['clra_amend_endDate']),
+      formFiveStartDate: parseDate(json['form_five_startDate']),
+      formFiveEndDate: parseDate(json['form_five_endDate']),
       clraAmendHeadCountNumber: json['clra_amend_headCountNumber'] as int?,
       currentLicenceNumber: json['currentLicenceNumber'] as String?,
       ifpId: json['ifp_id'] as String?,
       ifpPassword: json['ifp_password'] as String?,
-      files: json['files'] as List<dynamic>?,
+      files: parseFiles(json['files']),
     );
   }
 
@@ -92,20 +122,53 @@ class CreateTrackerRequest {
       'contactPerson': contactPerson,
       'contactPersonEmail': contactPersonEmail,
       'contactPersonPhone': contactPersonPhone,
-      if (clraAmendStartDate != null) 'clra_amend_startDate': clraAmendStartDate,
+      if (clraAmendStartDate != null)
+        'clra_amend_startDate': clraAmendStartDate,
       if (clraAmendEndDate != null) 'clra_amend_endDate': clraAmendEndDate,
       if (formFiveStartDate != null) 'form_five_startDate': formFiveStartDate,
       if (formFiveEndDate != null) 'form_five_endDate': formFiveEndDate,
-      if (clraAmendHeadCountNumber != null) 'clra_amend_headCountNumber': clraAmendHeadCountNumber,
-      if (currentLicenceNumber != null) 'currentLicenceNumber': currentLicenceNumber,
+      if (clraAmendHeadCountNumber != null)
+        'clra_amend_headCountNumber': clraAmendHeadCountNumber,
+      if (currentLicenceNumber != null)
+        'currentLicenceNumber': currentLicenceNumber,
       if (ifpId != null) 'ifp_id': ifpId,
       if (ifpPassword != null) 'ifp_password': ifpPassword,
-      if (files != null) 'files': files,
+      if (files != null) 'files': files?.map((e) => e.toJson()).toList(),
     };
   }
 
   // Alias for toJson for backward compatibility
-  Map<String, dynamic> toBackendJson() => toJson();
+  Map<String, dynamic> toBackendJson() {
+    // Helper function to format DateTime to ISO 8601 string
+    String formatDate(DateTime? date) => date?.toIso8601String() ?? '';
+
+    return {
+      'vendorCode': vendorCode,
+      'clientName': clientName,
+      'principalID': principalId,
+      'applicationType': applicationType.toString().split('.').last,
+      if (noOfLabours != null) 'noOfLabours': noOfLabours,
+      'contactPerson': contactPerson,
+      'contactPersonEmail': contactPersonEmail,
+      'contactPersonPhone': contactPersonPhone,
+      if (clraAmendStartDate != null)
+        'clra_amend_startDate': formatDate(clraAmendStartDate!),
+      if (clraAmendEndDate != null)
+        'clra_amend_endDate': formatDate(clraAmendEndDate!),
+      if (formFiveStartDate != null)
+        'form_five_startDate': formatDate(formFiveStartDate!),
+      if (formFiveEndDate != null)
+        'form_five_endDate': formatDate(formFiveEndDate!),
+      if (clraAmendHeadCountNumber != null)
+        'clra_amend_headCountNumber': clraAmendHeadCountNumber,
+      if (currentLicenceNumber != null)
+        'currentLicenceNumber': currentLicenceNumber,
+      if (ifpId != null) 'ifp_id': ifpId,
+      if (ifpPassword != null) 'ifp_password': ifpPassword,
+      if (files != null && files!.isNotEmpty)
+        'files': files!.map((file) => file.toJson()).toList(),
+    };
+  }
 
   CreateTrackerRequest copyWith({
     String? vendorCode,
@@ -116,15 +179,15 @@ class CreateTrackerRequest {
     String? contactPerson,
     String? contactPersonEmail,
     String? contactPersonPhone,
-    String? clraAmendStartDate,
-    String? clraAmendEndDate,
-    String? formFiveStartDate,
-    String? formFiveEndDate,
+    DateTime? clraAmendStartDate,
+    DateTime? clraAmendEndDate,
+    DateTime? formFiveStartDate,
+    DateTime? formFiveEndDate,
     int? clraAmendHeadCountNumber,
     String? currentLicenceNumber,
     String? ifpId,
     String? ifpPassword,
-    List<dynamic>? files,
+    List<TrackerFile>? files,
   }) {
     return CreateTrackerRequest(
       vendorCode: vendorCode ?? this.vendorCode,
@@ -139,7 +202,8 @@ class CreateTrackerRequest {
       clraAmendEndDate: clraAmendEndDate ?? this.clraAmendEndDate,
       formFiveStartDate: formFiveStartDate ?? this.formFiveStartDate,
       formFiveEndDate: formFiveEndDate ?? this.formFiveEndDate,
-      clraAmendHeadCountNumber: clraAmendHeadCountNumber ?? this.clraAmendHeadCountNumber,
+      clraAmendHeadCountNumber:
+          clraAmendHeadCountNumber ?? this.clraAmendHeadCountNumber,
       currentLicenceNumber: currentLicenceNumber ?? this.currentLicenceNumber,
       ifpId: ifpId ?? this.ifpId,
       ifpPassword: ifpPassword ?? this.ifpPassword,

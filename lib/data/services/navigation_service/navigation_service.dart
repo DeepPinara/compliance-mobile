@@ -98,6 +98,12 @@ class NavigationService {
     _navigateTo(kTrackerdocforvalidationRoute);
   }
 
+  void navigateToTrackerdocforvalidationdetail(TrackerApplication document) {
+    _navigateTo(kTrackerdocforvalidationdetailRoute, arguments: {
+      'document': document,
+      'documentId': document.id,
+    });
+  }
 
   // principle
 

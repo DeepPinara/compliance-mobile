@@ -1,8 +1,10 @@
 import 'package:compliancenavigator/data/models/company_name_model.dart';
 import 'package:compliancenavigator/data/models/create_tracker.dart';
+import 'package:compliancenavigator/data/models/tracker_file.dart';
 import 'package:compliancenavigator/data/services/date_picker_service.dart';
 import 'package:compliancenavigator/modules/principle/principle_repository.dart';
 import 'package:compliancenavigator/modules/tracker/tracker_repository.dart';
+import 'package:compliancenavigator/utils/file_utils/file_picker.dart';
 import 'package:compliancenavigator/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,6 +35,7 @@ class CreateapplicationtrackerController extends GetxController {
   final TextEditingController periodEndController = TextEditingController();
   DateTime? periodEndDate;
   final TextEditingController licenseNumberController = TextEditingController();
+  final TextEditingController form5FileController = TextEditingController();
   final TextEditingController headCountController = TextEditingController();
   final TextEditingController ifpPortalIdController = TextEditingController();
   final TextEditingController ifpPortalPasswordController =
@@ -46,7 +49,7 @@ class CreateapplicationtrackerController extends GetxController {
   TrackerApplicationType selectedApplicationType = TrackerApplicationType.bocw;
 
   // File upload
-  final form5FileName = ''.obs;
+  PickedFile? form5File;
 
   @override
   void onInit() {
@@ -88,7 +91,7 @@ class CreateapplicationtrackerController extends GetxController {
       try {
         CreateTrackerResponse response =
             await trackerRepository.createTrackerApplication(
-          getCreateTrackerRequest(),
+          await getCreateTrackerRequest(),
         );
         showSnackBar('Application created successfully ${response.id}',
             isSuccess: true);
@@ -102,7 +105,7 @@ class CreateapplicationtrackerController extends GetxController {
     }
   }
 
-  CreateTrackerRequest getCreateTrackerRequest() {
+  Future<CreateTrackerRequest> getCreateTrackerRequest() async {
     // Basic Details
     final basicDetails = CreateTrackerRequest(
       vendorCode: vendorCodeController.text,
@@ -121,20 +124,35 @@ class CreateapplicationtrackerController extends GetxController {
       case TrackerApplicationType.bocw:
         return basicDetails;
       case TrackerApplicationType.clraNew:
-        return basicDetails.copyWith(
-          clraAmendStartDate: periodStartController.text,
-          clraAmendEndDate: periodEndController.text,
-        );
       case TrackerApplicationType.clraRenewal:
+        final files = await _getFiles();
         return basicDetails.copyWith(
-          clraAmendStartDate: periodStartController.text,
-          clraAmendEndDate: periodEndController.text,
+          formFiveStartDate: periodStartDate,
+          formFiveEndDate: periodEndDate,
+          files: files,
         );
       case TrackerApplicationType.clraAmendment:
         return basicDetails.copyWith(
-          clraAmendStartDate: periodStartController.text,
-          clraAmendEndDate: periodEndController.text,
+          clraAmendStartDate: periodStartDate,
+          clraAmendEndDate: periodEndDate,
+          currentLicenceNumber: licenseNumberController.text,
+          ifpId: ifpPortalIdController.text,
+          ifpPassword: ifpPortalPasswordController.text,
         );
+    }
+  }
+
+  Future<List<TrackerFile>> _getFiles() async {
+    try {
+      final fileKey = await trackerRepository.uploadFiles(form5File!);
+      return <TrackerFile>[
+        TrackerFile(
+          fileFieldName: TrackerFilesType.form5,
+          fileKey: fileKey,
+        ),
+      ];
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -145,9 +163,24 @@ class CreateapplicationtrackerController extends GetxController {
 
   // Handle file picker for Form 5
   Future<void> pickForm5File() async {
-    // TODO: Implement file picking logic
-    // This is a placeholder - you would typically use file_picker or similar package
-    form5FileName.value = 'form5_document.pdf'; // Example filename
+    try {
+      final pickedFile = await pickImageOrFile(
+        isFileOption: true,
+        typeOfFileSelect: [
+          FileTypeSelect.pdf,
+          FileTypeSelect.image,
+          FileTypeSelect.doc,
+        ],
+      );
+
+      if (pickedFile != null) {
+        form5File = pickedFile;
+        form5FileController.text = pickedFile.name ?? pickedFile.path ?? '';
+      }
+      update([createapplicationtrackerScreenId]);
+    } catch (e) {
+      showSnackBar(e.toString());
+    }
   }
 
   // Handle date range selection
@@ -159,6 +192,8 @@ class CreateapplicationtrackerController extends GetxController {
     if (range != null) {
       periodStartController.text = range.start.displayFormat();
       periodEndController.text = range.end.displayFormat();
+      periodStartDate = range.start;
+      periodEndDate = range.end;
       update([createapplicationtrackerScreenId]);
     }
   }

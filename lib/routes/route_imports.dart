@@ -23,6 +23,8 @@ import 'package:compliancenavigator/views/trackerdashboard/trackerdashboard_bind
 import 'package:compliancenavigator/views/trackerdashboard/trackerdashboard_screen.dart';
 import 'package:compliancenavigator/views/trackerdocforvalidation/trackerdocforvalidation_binding.dart';
 import 'package:compliancenavigator/views/trackerdocforvalidation/trackerdocforvalidation_screen.dart';
+import 'package:compliancenavigator/views/trackerdocforvalidationdetail/trackerdocforvalidationdetail_binding.dart';
+import 'package:compliancenavigator/views/trackerdocforvalidationdetail/trackerdocforvalidationdetail_screen.dart';
 import 'package:compliancenavigator/views/trackermenu/trackermenu_binding.dart';
 import 'package:compliancenavigator/views/trackermenu/trackermenu_screen.dart';
 import 'package:get/get.dart';

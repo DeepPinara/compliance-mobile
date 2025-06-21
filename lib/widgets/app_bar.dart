@@ -90,7 +90,7 @@ class DLAppBar extends StatelessWidget implements PreferredSizeWidget {
                       style: Get.textTheme.titleLarge!.copyWith(
                         color: AppColors.onPrimaryTextColor,
                         letterSpacing: 0.1,
-                        fontSize: 24,
+                        fontSize: 20,
                       ),
                       // textAlign: TextAlign.start,
                     ),

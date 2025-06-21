@@ -197,6 +197,16 @@ class CreateapplicationtrackerScreen
             validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
           ),
           const SizedBox(height: 12),
+          AppTextField(
+            controller: controller.form5FileController,
+            label: 'Form 5',
+            hint: 'Upload Form 5',
+            type: TextFieldType.text,
+            readOnly: true,
+            validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
+            onTap: () => controller.pickForm5File(),
+          ),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
@@ -223,14 +233,6 @@ class CreateapplicationtrackerScreen
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 12),
-          AppTextField(
-            controller: controller.headCountController,
-            label: 'Head Count',
-            hint: 'Enter number of employees',
-            type: TextFieldType.number,
-            validator: (value) => value?.isEmpty ?? true ? 'Required' : null,
           ),
         ],
       ),

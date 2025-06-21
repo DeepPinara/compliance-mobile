@@ -1,21 +1,27 @@
 // ignore_for_file: avoid_returning_null_for_void
 
+import 'dart:io';
+
 import 'package:compliancenavigator/data/models/create_tracker.dart';
 import 'package:compliancenavigator/data/models/dashboard_data.dart';
 import 'package:compliancenavigator/data/models/auth/login_response.dart';
 import 'package:compliancenavigator/data/models/bug_report.dart';
 import 'package:compliancenavigator/data/models/company.dart';
 import 'package:compliancenavigator/data/models/contractor.dart';
+import 'package:compliancenavigator/data/models/file_upload_response.dart';
 import 'package:compliancenavigator/data/models/principle.dart';
 import 'package:compliancenavigator/data/models/company_name_model.dart';
 import 'package:compliancenavigator/data/models/api_response.dart';
 import 'package:compliancenavigator/data/models/list_api_response.dart';
+import 'package:compliancenavigator/data/models/tracker_application.dart';
 import 'package:compliancenavigator/data/models/user.dart';
 import 'package:compliancenavigator/data/services/backend/end_points.dart';
 import 'package:compliancenavigator/data/clients/network/api_service_base.dart';
 import 'package:compliancenavigator/data/clients/network/backend/api_service.dart';
 import 'package:compliancenavigator/data/clients/network/backend/exceptions/network_exception.dart';
 import 'package:compliancenavigator/data/clients/network/backend/error_handling/network_error_constants.dart';
+import 'package:compliancenavigator/utils/file_utils/file_picker.dart';
+import 'package:dio/dio.dart';
 
 /// BackendApiCallService: Implementation of all API endpoints from the Swagger documentation
 class BackendApiCallService {
@@ -31,7 +37,7 @@ class BackendApiCallService {
       CreateTrackerRequest request) async {
     final response = await _apiService.post<Map<String, dynamic>>(
       ApiEndpoints.tracker,
-      data: request.toJson(),
+      data: request.toBackendJson(),
       fromJson: (data) => data as Map<String, dynamic>,
     );
 
@@ -69,7 +75,7 @@ class BackendApiCallService {
   }
 
   //trackerDocToBeVerified
-  Future<ApiResponse<ListApiResponse<Map<String, dynamic>>>>
+  Future<ApiResponse<ListApiResponse<TrackerApplication>>>
       getTrackerDocToBeVerified({
     required int page,
     required int limit,
@@ -82,14 +88,14 @@ class BackendApiCallService {
     };
 
     return await _apiService
-        .get<ApiResponse<ListApiResponse<Map<String, dynamic>>>>(
+        .get<ApiResponse<ListApiResponse<TrackerApplication>>>(
       ApiEndpoints.trackerDocToBeVerified,
       queryParameters: queryParams,
       fromJson: (data) => ApiResponse.fromJson(
         data,
-        (json) => ListApiResponse<Map<String, dynamic>>.fromJson(
+        (json) => ListApiResponse<TrackerApplication>.fromJson(
           json as Map<String, dynamic>,
-          (json) => json as Map<String, dynamic>,
+          (json) => TrackerApplication.fromJson(json as Map<String, dynamic>),
         ),
       ),
     );
@@ -144,6 +150,22 @@ class BackendApiCallService {
           (json) => json as Map<String, dynamic>,
         );
       },
+    );
+  }
+
+  // Tracker File Upload Admin
+  // /rest/file-upload/tracker
+  Future<ApiResponse<FileUploadResponse>> uploadTrackerFileAdmin(
+      String fileName) async {
+    return await _apiService.post<ApiResponse<FileUploadResponse>>(
+      ApiEndpoints.trackerFileUploadAdmin,
+      data: {
+        'fileName': fileName,
+      },
+      fromJson: (data) => ApiResponse.fromJson(
+        data,
+        (json) => FileUploadResponse.fromJson(json),
+      ),
     );
   }
 
@@ -543,5 +565,42 @@ class BackendApiCallService {
         (json) => DashboardData.fromBackend(json as Map<String, dynamic>),
       ),
     );
+  }
+
+  /// Upload file using the presigned URL
+  Future<bool> uploadFileWithPresignedUrl(
+      String presignedUrl, PickedFile file, String fileName) async {
+    try {
+      final dio = Dio();
+
+      // Read file as bytes
+      final File fileObj = File(file.path!);
+      final bytes = await fileObj.readAsBytes();
+
+      // Determine content type based on file extension
+      String contentType = 'application/octet-stream';
+      if (fileName.toLowerCase().endsWith('.jpg') ||
+          fileName.toLowerCase().endsWith('.jpeg')) {
+        contentType = 'image/jpeg';
+      } else if (fileName.toLowerCase().endsWith('.png')) {
+        contentType = 'image/png';
+      }
+
+      final response = await dio.put(
+        presignedUrl,
+        data: Stream.fromIterable([bytes]),
+        options: Options(
+          headers: {
+            'Content-Type': contentType,
+            'Content-Length': bytes.length.toString(),
+          },
+          contentType: contentType,
+        ),
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

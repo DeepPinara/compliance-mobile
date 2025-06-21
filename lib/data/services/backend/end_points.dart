@@ -55,6 +55,7 @@ class ApiEndpoints {
   static String trackerHyperLink(String secret) => "$tracker/$secret/hyper-link";
   static String trackerById(int id) => "$tracker/$id";
   static String trackerDocToBeVerifiedById(int id) => "$trackerDocToBeVerified/$id";
+  static const String trackerFileUploadAdmin = "$apiBase/file-upload/tracker";
   static const String wageMasterBulk = "$wageMaster/bulk";
   static String wageMasterById(int id) => "$wageMaster/$id";
   

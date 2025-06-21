@@ -1,5 +1,6 @@
 
 import 'package:compliancenavigator/data/models/principle.dart';
+import 'package:compliancenavigator/data/models/tracker_application.dart';
 import 'package:compliancenavigator/data/services/network_service.dart';
 import 'package:compliancenavigator/utils/snack_bar.dart';
 import 'package:compliancenavigator/views/createapplicationtracker/createapplicationtracker_screen.dart';
@@ -10,6 +11,7 @@ import 'package:compliancenavigator/views/principlelist/principlelist_screen.dar
 import 'package:compliancenavigator/views/selectmodule/selectmodule_screen.dart';
 import 'package:compliancenavigator/views/trackerdashboard/trackerdashboard_screen.dart';
 import 'package:compliancenavigator/views/trackerdocforvalidation/trackerdocforvalidation_screen.dart';
+import 'package:compliancenavigator/views/trackerdocforvalidationdetail/trackerdocforvalidationdetail_screen.dart';
 import 'package:compliancenavigator/views/trackermenu/trackermenu_screen.dart';
 import 'package:get/get.dart';
 
