@@ -50,25 +50,28 @@ String _generateConstantName(String path) {
   // Remove 'assets/' prefix and file extension
   final name = path
       .replaceFirst('assets/', '')
-      .replaceAll(RegExp(r'\.(png|jpg|jpeg|svg|gif|json|lottie)$'), '');
+      .replaceAll(RegExp(r'[\(\)\-\s]'), '_') // Replace special chars with underscore
+      .replaceAll(RegExp(r'_{2,}'), '_') // Replace multiple underscores with single
+      .replaceAll(RegExp(r'_\.'), '.'); // Remove underscore before extension
 
   // Convert path segments to camelCase
   final segments = name.split('/');
   final constantName = segments.map((segment) {
-    // Replace spaces with underscores first
-    final processedSegment = segment.replaceAll(' ', '_');
+    // Remove file extension
+    final withoutExt = segment.replaceAll(RegExp(r'\.[^.]*$'), '');
     
-    // Now split by underscores and convert to camelCase
-    final words = processedSegment
+    // Convert to valid Dart identifier
+    final validIdentifier = withoutExt
         .split('_')
-        .where((word) => word.isNotEmpty) // Skip empty segments
-        .map((word) => word[0].toUpperCase() + word.substring(1))
+        .where((word) => word.isNotEmpty)
+        .map((word) => word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '')
         .join('');
-    return words;
+        
+    return validIdentifier;
   }).join('');
 
-  // Add 'd' prefix and ensure first character after 'd' is uppercase
-  return 'd$constantName';
+  // Add 'd' prefix and ensure it's a valid Dart identifier
+  return 'd${constantName.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '')}';
 }
 
 extension on List<String> {

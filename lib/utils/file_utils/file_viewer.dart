@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+// import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 // import 'package:http/http.dart' as http;
@@ -111,18 +111,18 @@ class _FileViewerState extends State<FileViewer> {
   Widget _buildViewer(String extension) {
     switch (extension) {
       case '.pdf':
-        return  SfPdfViewer.file(
-          File(_localPath!),
-          enableDoubleTapZooming: true,
-          enableTextSelection: true,
-          pageSpacing: 8,
-          onDocumentLoadFailed: (details) {
-            setState(() {
-              _error = details.description;
-              _isLoading = false;
-            });
-          },
-        );
+        // return  SfPdfViewer.file(
+        //   File(_localPath!),
+        //   enableDoubleTapZooming: true,
+        //   enableTextSelection: true,
+        //   pageSpacing: 8,
+        //   onDocumentLoadFailed: (details) {
+        //     setState(() {
+        //       _error = details.description;
+        //       _isLoading = false;
+        //     });
+        //   },
+        // );
 
       case '.jpg':
       case '.jpeg':

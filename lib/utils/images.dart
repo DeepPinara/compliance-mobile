@@ -1,6 +1,8 @@
 // Generated file. Do not edit.
-// Generated on 2025-05-29 01:55:51.859387
+// Generated on 2025-06-22 01:32:17.486900
 
+const String dImagesLogo01 = 'assets/images/logo-01.png';
+const String dImagesLogo012 = 'assets/images/logo-01_(2).png';
 const String dSvgsLocation = 'assets/svgs/Location.svg';
 const String dSvgsAppleCalendar = 'assets/svgs/apple_calendar.svg';
 const String dSvgsAppleLogin = 'assets/svgs/apple_login.svg';
