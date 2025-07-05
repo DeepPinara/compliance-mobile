@@ -61,7 +61,7 @@ class TrackerdocforvalidationController extends GetxController
 
     try {
       final ListApiResponse<TrackerApplication> response =
-          await _trackerRepository.fetchTrackerdocforvalidation(
+          await _trackerRepository.fetchTrackerForAdmin(
         page: _currentPage,
         limit: itemsPerPage,
       );

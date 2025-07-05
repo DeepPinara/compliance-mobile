@@ -39,6 +39,7 @@ class TrackermenuScreen extends GetWidget<TrackermenuController> {
   _buildMenuItem(IconData icon, String title, Function onTap) {
     return InkWell(
       onTap: () => onTap(),
+      borderRadius: BorderRadius.circular(12),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 18),
         child: Row(

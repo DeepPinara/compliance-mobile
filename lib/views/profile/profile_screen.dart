@@ -16,8 +16,16 @@ class ProfileScreen extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DLAppBar(
+      appBar: DLAppBar(
         title: 'My Profile',
+        suffixWidget: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: controller.logout,
+            ),
+          ],
+        ),
       ),
       body: GetBuilder<ProfileController>(
         id: ProfileController.profileScreenId,
@@ -34,7 +42,8 @@ class ProfileScreen extends GetView<ProfileController> {
     );
   }
 
-  Widget _buildProfileContent(BuildContext context, ProfileController controller) {
+  Widget _buildProfileContent(
+      BuildContext context, ProfileController controller) {
     final user = controller.currentUser;
     if (user == null) {
       return Center(
@@ -140,7 +149,7 @@ class ProfileScreen extends GetView<ProfileController> {
 
   Widget _buildInfoCard(BuildContext context, User user) {
     final dateFormat = DateFormat('MMM d, yyyy');
-    
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -150,12 +159,15 @@ class ProfileScreen extends GetView<ProfileController> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            _buildInfoRow(context, 'Member Since', dateFormat.format(user.createdAt)),
+            _buildInfoRow(
+                context, 'Member Since', dateFormat.format(user.createdAt)),
             const Divider(height: 24),
-            _buildInfoRow(context, 'Last Updated', dateFormat.format(user.updatedAt)),
+            _buildInfoRow(
+                context, 'Last Updated', dateFormat.format(user.updatedAt)),
             if (user.lastActivity != null) ...[
               const Divider(height: 24),
-              _buildInfoRow(context, 'Last Active', _formatLastActive(user.lastActivity!)),
+              _buildInfoRow(context, 'Last Active',
+                  _formatLastActive(user.lastActivity!)),
             ],
           ],
         ),
@@ -185,7 +197,8 @@ class ProfileScreen extends GetView<ProfileController> {
     );
   }
 
-  Widget _buildModulesList(BuildContext context, Map<String, List<String>> modules) {
+  Widget _buildModulesList(
+      BuildContext context, Map<String, List<String>> modules) {
     if (modules.isEmpty) {
       return const Card(
         child: Padding(
@@ -214,7 +227,8 @@ class ProfileScreen extends GetView<ProfileController> {
     );
   }
 
-  Widget _buildModuleItem(BuildContext context, String moduleName, List<String> permissions) {
+  Widget _buildModuleItem(
+      BuildContext context, String moduleName, List<String> permissions) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -231,7 +245,8 @@ class ProfileScreen extends GetView<ProfileController> {
           runSpacing: 8,
           children: permissions
               .map((permission) => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: AppColors.primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),

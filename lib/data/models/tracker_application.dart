@@ -74,10 +74,18 @@ class TrackerApplication {
       contactPerson: json['contactPerson'] as String,
       contactPersonEmail: json['contactPersonEmail'] as String,
       contactPersonPhone: json['contactPersonPhone'] as String,
-      clraAmendStartDate: json['clra_amend_startDate'] != null ? DateTime.parse(json['clra_amend_startDate']) : null,
-      clraAmendEndDate: json['clra_amend_endDate'] != null ? DateTime.parse(json['clra_amend_endDate']) : null,
-      formFiveStartDate: json['form_five_startDate'] != null ? DateTime.parse(json['form_five_startDate']) : null,
-      formFiveEndDate: json['form_five_endDate'] != null ? DateTime.parse(json['form_five_endDate']) : null,
+      clraAmendStartDate: json['clra_amend_startDate'] != null
+          ? DateTime.parse(json['clra_amend_startDate'])
+          : null,
+      clraAmendEndDate: json['clra_amend_endDate'] != null
+          ? DateTime.parse(json['clra_amend_endDate'])
+          : null,
+      formFiveStartDate: json['form_five_startDate'] != null
+          ? DateTime.parse(json['form_five_startDate'])
+          : null,
+      formFiveEndDate: json['form_five_endDate'] != null
+          ? DateTime.parse(json['form_five_endDate'])
+          : null,
       clraAmendHeadCountNumber: json['clra_amend_headCountNumber'] as int?,
       ifpId: json['ifp_id'] as String?,
       ifpPassword: json['ifp_password'] as String?,
@@ -85,14 +93,17 @@ class TrackerApplication {
       lastLicenceNumber: json['lastLicenceNumber'] as String?,
       paymentReceived: json['paymentReceived'] as bool? ?? false,
       applicationNum: json['applicationNum'] as String?,
-      applicationDate: json['applicationDate'] != null ? DateTime.parse(json['applicationDate']) : null,
+      applicationDate: json['applicationDate'] != null
+          ? DateTime.parse(json['applicationDate'])
+          : null,
       applicationStatus: TrackerApplicationStatus.values.firstWhere(
         (e) => e.toBackend() == json['applicationStatus'],
         orElse: () => TrackerApplicationStatus.pending,
       ),
       creatorId: json['creatorId'] as String,
       files: (json['files'] as List<dynamic>?)
-              ?.map((file) => TrackerFile.fromJson(file as Map<String, dynamic>))
+              ?.map(
+                  (file) => TrackerFile.fromJson(file as Map<String, dynamic>))
               .toList() ??
           [],
       createdAt: DateTime.parse(json['createdAt'] as String),
@@ -140,5 +151,104 @@ class TrackerApplication {
       'updatedAt': updatedAt.toIso8601String(),
       if (deletedAt != null) 'deletedAt': deletedAt?.toIso8601String(),
     };
+  }
+
+  // toBackendJson
+  Map<String, dynamic> toBackendJson() {
+    return {
+      'id': id,
+      if (vendorCode != null) 'vendorCode': vendorCode,
+      if (clientName != null) 'clientName': clientName,
+      if (principalId != null) 'principalID': principalId,
+      if (applicationType != null)
+        'applicationType': applicationType.toBackend(),
+      if (noOfLabours != null) 'noOfLabours': noOfLabours,
+      'contactPerson': contactPerson,
+      'contactPersonEmail': contactPersonEmail,
+      'contactPersonPhone': contactPersonPhone,
+      if (clraAmendStartDate != null)
+        'clra_amend_startDate': clraAmendStartDate?.toIso8601String(),
+      if (clraAmendEndDate != null)
+        'clra_amend_endDate': clraAmendEndDate?.toIso8601String(),
+      if (formFiveStartDate != null)
+        'form_five_startDate': formFiveStartDate?.toIso8601String(),
+      if (formFiveEndDate != null)
+        'form_five_endDate': formFiveEndDate?.toIso8601String(),
+      if (clraAmendHeadCountNumber != null)
+        'clra_amend_headCountNumber': clraAmendHeadCountNumber,
+      if (ifpId != null) 'ifp_id': ifpId,
+      if (ifpPassword != null) 'ifp_password': ifpPassword,
+      if (currentLicenceNumber != null)
+        'currentLicenceNumber': currentLicenceNumber,
+      if (lastLicenceNumber != null) 'lastLicenceNumber': lastLicenceNumber,
+      'paymentReceived': paymentReceived,
+      if (applicationNum != null) 'applicationNum': applicationNum,
+      if (applicationDate != null)
+        'applicationDate': applicationDate?.toIso8601String(),
+      'applicationStatus': applicationStatus.toBackend(),
+      'creatorId': creatorId,
+      'files': files.map((file) => file.toJson()).toList(),
+    };
+  }
+
+  // Copy with
+  TrackerApplication copyWith({
+    int? id,
+    String? vendorCode,
+    String? clientName,
+    int? principalId,
+    TrackerApplicationType? applicationType,
+    int? noOfLabours,
+    String? contactPerson,
+    String? contactPersonEmail,
+    String? contactPersonPhone,
+    DateTime? clraAmendStartDate,
+    DateTime? clraAmendEndDate,
+    DateTime? formFiveStartDate,
+    DateTime? formFiveEndDate,
+    int? clraAmendHeadCountNumber,
+    String? ifpId,
+    String? ifpPassword,
+    String? currentLicenceNumber,
+    String? lastLicenceNumber,
+    bool? paymentReceived,
+    String? applicationNum,
+    DateTime? applicationDate,
+    TrackerApplicationStatus? applicationStatus,
+    String? creatorId,
+    List<TrackerFile>? files,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+  }) {
+    return TrackerApplication(
+      id: id ?? this.id,
+      vendorCode: vendorCode ?? this.vendorCode,
+      clientName: clientName ?? this.clientName,
+      principalId: principalId ?? this.principalId,
+      applicationType: applicationType ?? this.applicationType,
+      noOfLabours: noOfLabours ?? this.noOfLabours,
+      contactPerson: contactPerson ?? this.contactPerson,
+      contactPersonEmail: contactPersonEmail ?? this.contactPersonEmail,
+      contactPersonPhone: contactPersonPhone ?? this.contactPersonPhone,
+      clraAmendStartDate: clraAmendStartDate ?? this.clraAmendStartDate,
+      clraAmendEndDate: clraAmendEndDate ?? this.clraAmendEndDate,
+      formFiveStartDate: formFiveStartDate ?? this.formFiveStartDate,
+      formFiveEndDate: formFiveEndDate ?? this.formFiveEndDate,
+      clraAmendHeadCountNumber: clraAmendHeadCountNumber ?? this.clraAmendHeadCountNumber,
+      ifpId: ifpId ?? this.ifpId,
+      ifpPassword: ifpPassword ?? this.ifpPassword,
+      currentLicenceNumber: currentLicenceNumber ?? this.currentLicenceNumber,
+      lastLicenceNumber: lastLicenceNumber ?? this.lastLicenceNumber,
+      paymentReceived: paymentReceived ?? this.paymentReceived,
+      applicationNum: applicationNum ?? this.applicationNum,
+      applicationDate: applicationDate ?? this.applicationDate,
+      applicationStatus: applicationStatus ?? this.applicationStatus,
+      creatorId: creatorId ?? this.creatorId,
+      files: files ?? this.files,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+    );
   }
 }

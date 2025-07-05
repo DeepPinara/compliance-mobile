@@ -20,7 +20,7 @@ class TrackerdashboardController extends GetxController
   final List<String> labels = ['Home', 'Menu', 'Team', 'Profile'];
   final List<String> images = [
     dSvgsHomeMenu,
-    dSvgsSearch,
+    dSvgsMenu,
     dSvgsTeamManagement,
     dSvgsUserMenu
   ];

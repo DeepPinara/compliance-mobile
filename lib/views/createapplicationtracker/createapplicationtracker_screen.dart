@@ -1,4 +1,5 @@
 import 'package:compliancenavigator/data/models/company_name_model.dart';
+import 'package:compliancenavigator/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:compliancenavigator/utils/enums.dart';
@@ -26,39 +27,65 @@ class CreateapplicationtrackerScreen
           id: CreateapplicationtrackerController
               .createapplicationtrackerScreenId,
           builder: (controller) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: controller.formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _buildSectionHeader('Basic Detail'),
-                    const SizedBox(height: 16),
-                    _buildBasicDetailsSection(),
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Form(
+                      key: controller.formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildSectionHeader('Basic Detail'),
+                          const SizedBox(height: 16),
+                          _buildBasicDetailsSection(),
 
-                    // Conditional sections based on application type
-                    if (controller.selectedApplicationType ==
-                            TrackerApplicationType.clraNew ||
-                        controller.selectedApplicationType ==
-                            TrackerApplicationType.clraRenewal)
-                      _buildClraNewRenewSection()
-                    else if (controller.selectedApplicationType ==
-                        TrackerApplicationType.clraAmendment)
-                      _buildClraAmendmentSection()
-                    else
-                      const SizedBox.shrink(),
-
-                    const SizedBox(height: 24),
-                    AppButton(
-                      label: 'Submit',
-                      onPressed: controller.submitForm,
-                      buttonType: AppButtonType.primary,
+                          // Conditional sections based on application type
+                          if (controller.selectedApplicationType ==
+                                  TrackerApplicationType.clraNew ||
+                              controller.selectedApplicationType ==
+                                  TrackerApplicationType.clraRenewal)
+                            _buildClraNewRenewSection()
+                          else if (controller.selectedApplicationType ==
+                              TrackerApplicationType.clraAmendment)
+                            _buildClraAmendmentSection()
+                          else
+                            const SizedBox.shrink(),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 24),
-                  ],
+                  ),
                 ),
-              ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Get.theme.colorScheme.surface,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        spreadRadius: 4,
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: AppConstants.kAppScreenSpacing,
+                      left: AppConstants.kAppScreenSpacing,
+                      right: AppConstants.kAppScreenSpacing,
+                    ),
+                    child: SafeArea(
+                      bottom: true,
+                      child: AppButton(
+                        label: 'Submit',
+                        onPressed: controller.submitForm,
+                        buttonType: AppButtonType.primary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             );
           }),
     );

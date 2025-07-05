@@ -48,4 +48,9 @@ class AuthRepository {
   Future<String?> getToken() async {
     return _storageService.getAccessToken();
   }
+
+  // Logout
+  Future<void> logout() async {
+    await _storageService.clearAuthData();
+  }
 }

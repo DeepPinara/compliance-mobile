@@ -2,6 +2,7 @@ import 'package:compliancenavigator/data/models/company_name_model.dart';
 import 'package:compliancenavigator/data/models/create_tracker.dart';
 import 'package:compliancenavigator/data/models/tracker_file.dart';
 import 'package:compliancenavigator/data/services/date_picker_service.dart';
+import 'package:compliancenavigator/data/services/navigation_service/navigation_import.dart';
 import 'package:compliancenavigator/modules/principle/principle_repository.dart';
 import 'package:compliancenavigator/modules/tracker/tracker_repository.dart';
 import 'package:compliancenavigator/utils/file_utils/file_picker.dart';
@@ -16,9 +17,12 @@ class CreateapplicationtrackerController extends GetxController {
 
   final PrincipleRepository principleRepository;
   final TrackerRepository trackerRepository;
+  final NavigationService navigationService;
 
   CreateapplicationtrackerController(
-      {required this.principleRepository, required this.trackerRepository});
+      {required this.principleRepository,
+      required this.trackerRepository,
+      required this.navigationService});
 
   // Form key for validation
   final formKey = GlobalKey<FormState>();
@@ -95,6 +99,7 @@ class CreateapplicationtrackerController extends GetxController {
         );
         showSnackBar('Application created successfully ${response.id}',
             isSuccess: true);
+        navigationService.goBack();
       } catch (e) {
         // Show error message
         showSnackBar(

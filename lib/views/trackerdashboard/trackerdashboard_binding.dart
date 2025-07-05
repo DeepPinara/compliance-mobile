@@ -1,4 +1,5 @@
 import 'package:compliancenavigator/data/services/navigation_service/navigation_import.dart';
+import 'package:compliancenavigator/modules/auth/auth_repository.dart';
 import 'package:compliancenavigator/modules/dashboard/dashboard_repository.dart';
 import 'package:compliancenavigator/modules/principle/principle_repository.dart';
 import 'package:compliancenavigator/modules/tracker/tracker_repository.dart';
@@ -13,6 +14,7 @@ class TrackerdashboardBinding extends Bindings {
   @override
   void dependencies() {
     final UserRepository userRepository = Get.find<UserRepository>();
+    final AuthRepository authRepository = Get.find<AuthRepository>();
     final NavigationService navigationService = Get.find<NavigationService>();
     final PrincipleRepository principleRepository =
         Get.find<PrincipleRepository>();
@@ -36,7 +38,10 @@ class TrackerdashboardBinding extends Bindings {
 
     // ProfileController
     Get.lazyPut<ProfileController>(
-      () => ProfileController(userRepository: userRepository),
+      () => ProfileController(
+          userRepository: userRepository,
+          authRepository: authRepository,
+          navigationService: navigationService),
     );
 
     Get.lazyPut<TrackerdashboardController>(

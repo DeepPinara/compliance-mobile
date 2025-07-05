@@ -9,12 +9,11 @@ class LoginController extends GetxController {
   final AuthRepository authRepository;
   final NavigationService navigationService;
 
-  LoginController({
-    required this.authRepository,
-    required this.navigationService
-  });
+  LoginController(
+      {required this.authRepository, required this.navigationService});
 
   static const String loginScreenId = 'Login_screen';
+  bool isLoading = false;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -23,10 +22,9 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
 
-    if(kDebugMode) {
+    if (kDebugMode) {
       emailController.text = 'deepinara10@gmail.com';
       passwordController.text = 'Deep@12345';
-      
     }
   }
 
@@ -35,8 +33,14 @@ class LoginController extends GetxController {
     super.onClose();
   }
 
+  void updateLoadingState({bool isLoading = false}) {
+    this.isLoading = isLoading;
+    update([loginScreenId]);
+  }
+
   void handleLogin() async {
     try {
+      updateLoadingState(isLoading: true);
       final email = emailController.text.trim();
       final password = passwordController.text.trim();
 
@@ -47,11 +51,13 @@ class LoginController extends GetxController {
       await authRepository.login(email: email, password: password);
 
       showSnackBar('Login successful', isSuccess: true);
+
       navigationService.navigateToDashboard();
     } catch (e) {
       showSnackBar(e.toString(), isSuccess: false);
+    } finally {
+      updateLoadingState();
     }
   }
 
-  // Add your controller logic here
 }

@@ -20,6 +20,7 @@ import 'package:compliancenavigator/data/clients/network/api_service_base.dart';
 import 'package:compliancenavigator/data/clients/network/backend/api_service.dart';
 import 'package:compliancenavigator/data/clients/network/backend/exceptions/network_exception.dart';
 import 'package:compliancenavigator/data/clients/network/backend/error_handling/network_error_constants.dart';
+import 'package:compliancenavigator/utils/enums.dart';
 import 'package:compliancenavigator/utils/file_utils/file_picker.dart';
 import 'package:dio/dio.dart';
 
@@ -45,7 +46,7 @@ class BackendApiCallService {
   }
 
   /// Get all trackers with pagination and search
-  Future<ListApiResponse<Map<String, dynamic>>> getTrackers({
+  Future<ApiResponse<ListApiResponse<TrackerApplication>>> getTrackers({
     int page = 1,
     int limit = 10,
     String? search,
@@ -56,21 +57,17 @@ class BackendApiCallService {
       if (search != null && search.isNotEmpty) 'search': search,
     };
 
-    return await _apiService.get<ListApiResponse<Map<String, dynamic>>>(
+    return await _apiService
+        .get<ApiResponse<ListApiResponse<TrackerApplication>>>(
       ApiEndpoints.tracker,
       queryParameters: params,
-      fromJson: (data) {
-        if (data == null) {
-          throw NetworkException(
-            code: NetworkErrorCode.unknown,
-            message: 'Invalid response from server',
-          );
-        }
-        return ListApiResponse.fromJson(
-          data as Map<String, dynamic>,
-          (json) => json as Map<String, dynamic>,
-        );
-      },
+      fromJson: (data) => ApiResponse.fromJson(
+        data,
+        (json) => ListApiResponse<TrackerApplication>.fromJson(
+          json as Map<String, dynamic>,
+          (json) => TrackerApplication.fromJson(json as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 
@@ -101,6 +98,35 @@ class BackendApiCallService {
     );
   }
 
+  //Update tracker Doc To Be Verified
+  Future<ApiResponse<Map<String, dynamic>>> updateDocToBeVerified({
+    required int id,
+    required TrackerApplicationStatus applicationStatus,
+    required String remark,
+  }) async {
+    final body = {
+      'applicationStatus': applicationStatus.toBackend(),
+      'remark': remark,
+    };
+
+    return await _apiService.post<ApiResponse<Map<String, dynamic>>>(
+      '${ApiEndpoints.trackerDocToBeVerified}/$id',
+      data: body,
+      fromJson: (data) {
+        if (data == null) {
+          throw NetworkException(
+            code: NetworkErrorCode.unknown,
+            message: 'Invalid response from server',
+          );
+        }
+        return ApiResponse.fromJson(
+          data as Map<String, dynamic>,
+          (json) => json as Map<String, dynamic>,
+        );
+      },
+    );
+  }
+
   /// Get tracker by ID
   Future<ApiResponse<Map<String, dynamic>>> getTrackerById(int id) async {
     return await _apiService.get<ApiResponse<Map<String, dynamic>>>(
@@ -121,23 +147,12 @@ class BackendApiCallService {
   }
 
   /// Update tracker by ID
-  Future<ApiResponse<Map<String, dynamic>>> updateTracker({
-    required int id,
-    int? noOfLabours,
-    String? ifpId,
-    String? ifpPassword,
-    String? lastLicenceNumber,
-    List<dynamic>? files,
-  }) async {
+  Future<ApiResponse<Map<String, dynamic>>> updateTracker(
+    TrackerApplication tracker,
+  ) async {
     return await _apiService.put<ApiResponse<Map<String, dynamic>>>(
-      '${ApiEndpoints.tracker}/$id',
-      data: {
-        if (noOfLabours != null) 'noOfLabours': noOfLabours,
-        if (ifpId != null) 'ifp_id': ifpId,
-        if (ifpPassword != null) 'ifp_password': ifpPassword,
-        if (lastLicenceNumber != null) 'lastLicenceNumber': lastLicenceNumber,
-        if (files != null) 'files': files,
-      },
+      '${ApiEndpoints.tracker}/${tracker.id}',
+      data: tracker.toBackendJson(),
       fromJson: (data) {
         if (data == null) {
           throw NetworkException(
@@ -145,9 +160,13 @@ class BackendApiCallService {
             message: 'Invalid response from server',
           );
         }
-        return ApiResponse.fromJson(
-          data as Map<String, dynamic>,
-          (json) => json as Map<String, dynamic>,
+
+        // Handle the response format: {data: OK, message: "Tracker updated successfully"}
+        final responseData = data as Map<String, dynamic>;
+        return ApiResponse<Map<String, dynamic>>(
+          data: responseData,
+          message: responseData['message'] as String?,
+          success: true,
         );
       },
     );

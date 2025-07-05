@@ -1,5 +1,5 @@
 // Generated file. Do not edit.
-// Generated on 2025-06-22 01:32:17.486900
+// Generated on 2025-07-05 12:39:10.293101
 
 const String dImagesLogo01 = 'assets/images/logo-01.png';
 const String dImagesLogo012 = 'assets/images/logo-01_(2).png';
@@ -21,6 +21,7 @@ const String dSvgsGoogleCalendar = 'assets/svgs/google_calendar.svg';
 const String dSvgsGoogleLogin = 'assets/svgs/google_login.svg';
 const String dSvgsHomeMenu = 'assets/svgs/home_menu.svg';
 const String dSvgsMail = 'assets/svgs/mail.svg';
+const String dSvgsMenu = 'assets/svgs/menu.svg';
 const String dSvgsMessage = 'assets/svgs/message.svg';
 const String dSvgsMessageMenu = 'assets/svgs/message_menu.svg';
 const String dSvgsMore = 'assets/svgs/more.svg';

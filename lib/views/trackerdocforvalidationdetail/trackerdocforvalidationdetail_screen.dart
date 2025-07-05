@@ -1,3 +1,5 @@
+import 'package:compliancenavigator/utils/constants.dart';
+import 'package:compliancenavigator/widgets/buttons/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:compliancenavigator/utils/colors.dart';
@@ -6,9 +8,11 @@ import 'package:compliancenavigator/widgets/app_bar.dart';
 import 'package:compliancenavigator/widgets/loading_indicator.dart';
 import 'trackerdocforvalidationdetail_controller.dart';
 
-const String kTrackerdocforvalidationdetailRoute = '/trackerdocforvalidationdetail';
+const String kTrackerdocforvalidationdetailRoute =
+    '/trackerdocforvalidationdetail';
 
-class TrackerdocforvalidationdetailScreen extends GetView<TrackerdocforvalidationdetailController> {
+class TrackerdocforvalidationdetailScreen
+    extends GetView<TrackerdocforvalidationdetailController> {
   const TrackerdocforvalidationdetailScreen({Key? key}) : super(key: key);
 
   @override
@@ -19,7 +23,8 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
         showBackButton: true,
       ),
       body: GetBuilder<TrackerdocforvalidationdetailController>(
-        id: TrackerdocforvalidationdetailController.trackerdocforvalidationdetailScreenId,
+        id: TrackerdocforvalidationdetailController
+            .trackerdocforvalidationdetailScreenId,
         builder: (controller) {
           if (controller.isLoading) {
             return const Center(child: LoadingIndicator());
@@ -38,9 +43,7 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
                       _buildDocumentDetails(controller),
                       const SizedBox(height: 24),
                       _buildAttachmentsSection(controller),
-                      const SizedBox(height: 24),
-                      _buildRemarksSection(controller),
-                      const SizedBox(height: 80), // Space for buttons
+                      const SizedBox(height: 80),
                     ],
                   ),
                 ),
@@ -53,7 +56,8 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
     );
   }
 
-  Widget _buildHeaderSection(TrackerdocforvalidationdetailController controller) {
+  Widget _buildHeaderSection(
+      TrackerdocforvalidationdetailController controller) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -102,7 +106,10 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
                     ],
                   ),
                 ),
-                _buildStatusChip(controller.document.applicationStatus.toString().split('.').last),
+                _buildStatusChip(controller.document.applicationStatus
+                    .toString()
+                    .split('.')
+                    .last),
               ],
             ),
           ],
@@ -111,7 +118,8 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
     );
   }
 
-  Widget _buildDocumentDetails(TrackerdocforvalidationdetailController controller) {
+  Widget _buildDocumentDetails(
+      TrackerdocforvalidationdetailController controller) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -148,7 +156,8 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
     );
   }
 
-  Widget _buildAttachmentsSection(TrackerdocforvalidationdetailController controller) {
+  Widget _buildAttachmentsSection(
+      TrackerdocforvalidationdetailController controller) {
     if (controller.document.files.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -174,7 +183,8 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
               spacing: 8,
               runSpacing: 8,
               children: controller.document.files
-                  .map((file) => _buildAttachmentChip(file.fileFieldName.toString().split('.').last))
+                  .map((file) => _buildAttachmentChip(
+                      file.fileFieldName.toString().split('.').last))
                   .toList(),
             ),
           ],
@@ -183,113 +193,68 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
     );
   }
 
-  Widget _buildRemarksSection(TrackerdocforvalidationdetailController controller) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Remarks',
-              style: Get.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: controller.remarksController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                hintText: 'Enter remarks (optional)',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.primary),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButtons(TrackerdocforvalidationdetailController controller) {
+  Widget _buildActionButtons(
+      TrackerdocforvalidationdetailController controller) {
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Get.theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
+            color: Colors.black.withOpacity(0.3),
+            spreadRadius: 4,
+            blurRadius: 10,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: OutlinedButton(
-              onPressed: () => _showRejectConfirmation(controller),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                side: const BorderSide(color: Colors.red),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: controller.isRejecting
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                      ),
-                    )
-                  : const Text(
-                      'Reject',
-                      style: TextStyle(color: Colors.red),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: AppConstants.kAppScreenSpacing,
+          left: AppConstants.kAppScreenSpacing,
+          right: AppConstants.kAppScreenSpacing,
+        ),
+        child: SafeArea(
+          bottom: true,
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => _showRejectConfirmation(controller),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    side: const BorderSide(color: Colors.red),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: controller.isApproving ? null : controller.approveDocument,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: controller.isRejecting
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.red),
+                          ),
+                        )
+                      : const Text(
+                          'Reject',
+                          style: TextStyle(color: Colors.red),
+                        ),
                 ),
               ),
-              child: controller.isApproving
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : const Text('Approve'),
-            ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: PrimaryButton(
+                  onPressed: controller.approveDocument,
+                  text: 'Approve',
+                  isLoading: controller.isApproving,
+                  width: double.infinity,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -317,10 +282,10 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
   Widget _buildAttachmentChip(String fileKey) {
     final fileName = fileKey.split('/').last;
     final fileExt = fileName.split('.').last.toLowerCase();
-    
+
     IconData icon;
     Color iconColor;
-    
+
     if (['pdf'].contains(fileExt)) {
       icon = Icons.picture_as_pdf_outlined;
       iconColor = Colors.red;
@@ -417,7 +382,8 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
     }
   }
 
-  void _showRejectConfirmation(TrackerdocforvalidationdetailController controller) {
+  void _showRejectConfirmation(
+      TrackerdocforvalidationdetailController controller) {
     Get.defaultDialog(
       title: 'Reject Document',
       content: Column(
@@ -439,7 +405,7 @@ class TrackerdocforvalidationdetailScreen extends GetView<Trackerdocforvalidatio
       textCancel: 'Cancel',
       confirmTextColor: Colors.white,
       buttonColor: Colors.red,
-      cancelTextColor: Colors.grey[700],
+      cancelTextColor: Colors.red,
       onConfirm: () async {
         if (controller.remarksController.text.trim().isEmpty) {
           Get.snackbar('Error', 'Please provide a reason for rejection');

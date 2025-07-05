@@ -1,3 +1,4 @@
+import 'package:compliancenavigator/widgets/buttons/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'login_controller.dart';
@@ -53,20 +54,11 @@ class LoginScreen extends GetWidget<LoginController> {
                 isRequired: true,
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
+              PrimaryButton(
                 onPressed: controller.handleLogin,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: colorScheme.primary,
-                  foregroundColor: colorScheme.onPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  'Login',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+                text: 'Login',
+                isLoading: controller.isLoading,
+                width: double.infinity,
               ),
             ],
           ),

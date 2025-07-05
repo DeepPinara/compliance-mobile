@@ -54,6 +54,7 @@ class StorageService {
   /// Clears all authentication related data (user and token)
   Future<void> clearAuthData() async {
     await clearTokens();
+    await clearUser();
     logger('clearAuthData');
   }
 

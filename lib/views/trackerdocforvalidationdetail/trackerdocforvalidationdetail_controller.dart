@@ -1,3 +1,7 @@
+import 'package:compliancenavigator/data/services/navigation_service/navigation_import.dart';
+import 'package:compliancenavigator/modules/tracker/tracker_repository.dart';
+import 'package:compliancenavigator/utils/enums.dart';
+import 'package:compliancenavigator/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:compliancenavigator/data/models/tracker_application.dart';
@@ -5,6 +9,13 @@ import 'package:compliancenavigator/data/models/tracker_application.dart';
 class TrackerdocforvalidationdetailController extends GetxController {
   static const String trackerdocforvalidationdetailScreenId =
       'trackerdocforvalidationdetail_screen';
+  final TrackerRepository trackerRepository;
+  final NavigationService navigationService;
+
+  TrackerdocforvalidationdetailController({
+    required this.trackerRepository,
+    required this.navigationService,
+  });
 
   late TrackerApplication document;
   bool isLoading = true;
@@ -33,12 +44,16 @@ class TrackerdocforvalidationdetailController extends GetxController {
     try {
       isApproving = true;
       update([trackerdocforvalidationdetailScreenId]);
-      
-      // TODO: Implement approval logic
-      await Future.delayed(const Duration(seconds: 1)); // Simulate API call
-      Get.back(result: 'approved');
+
+      final updateTracker = await trackerRepository.updateDocToBeVerified(
+        id: document.id,
+        applicationStatus: TrackerApplicationStatus.approved,
+        remark: 'Approved',
+      );
+      showSnackBar('Document approved successfully');
+      navigationService.goBack();
     } catch (e) {
-      Get.snackbar('Error', 'Failed to approve document: $e');
+      showSnackBar(e.toString());
     } finally {
       isApproving = false;
       update([trackerdocforvalidationdetailScreenId]);
@@ -49,12 +64,13 @@ class TrackerdocforvalidationdetailController extends GetxController {
     try {
       isRejecting = true;
       update([trackerdocforvalidationdetailScreenId]);
-      
+
       // TODO: Implement rejection logic with remarks
       await Future.delayed(const Duration(seconds: 1)); // Simulate API call
-      Get.back(result: 'rejected');
+      showSnackBar('Document rejected successfully');
+      navigationService.goBack();
     } catch (e) {
-      Get.snackbar('Error', 'Failed to reject document: $e');
+      showSnackBar(e.toString());
     } finally {
       isRejecting = false;
       update([trackerdocforvalidationdetailScreenId]);
