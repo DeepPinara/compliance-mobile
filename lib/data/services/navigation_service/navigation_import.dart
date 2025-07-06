@@ -9,9 +9,10 @@ import 'package:compliancenavigator/views/login/login_screen.dart';
 import 'package:compliancenavigator/views/principledetail/principledetail_screen.dart';
 import 'package:compliancenavigator/views/principlelist/principlelist_screen.dart';
 import 'package:compliancenavigator/views/selectmodule/selectmodule_screen.dart';
+import 'package:compliancenavigator/views/trackerapplicationdetail/trackerapplicationdetail_screen.dart';
 import 'package:compliancenavigator/views/trackerdashboard/trackerdashboard_screen.dart';
 import 'package:compliancenavigator/views/trackerdocforvalidation/trackerdocforvalidation_screen.dart';
-import 'package:compliancenavigator/views/trackerdocforvalidationdetail/trackerdocforvalidationdetail_screen.dart';
+import 'package:compliancenavigator/views/trackerlist/trackerlist_screen.dart';
 import 'package:compliancenavigator/views/trackermenu/trackermenu_screen.dart';
 import 'package:get/get.dart';
 

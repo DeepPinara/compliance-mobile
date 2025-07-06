@@ -1,6 +1,7 @@
 import 'package:compliancenavigator/themes/colors.dart';
 import 'package:compliancenavigator/views/home/home_screen.dart';
 import 'package:compliancenavigator/views/profile/profile_screen.dart';
+import 'package:compliancenavigator/views/trackerhome/trackerhome_screen.dart';
 import 'package:compliancenavigator/views/trackermenu/trackermenu_screen.dart';
 import 'package:compliancenavigator/widgets/image_view.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class TrackerdashboardScreen extends GetWidget<TrackerdashboardController> {
             return IndexedStack(
               index: controller.selectedIndex,
               children: [
-                const HomeScreen(),
+                const TrackerhomeScreen(),
                 const TrackermenuScreen(),
                 Container(),
                 const ProfileScreen(),

@@ -99,7 +99,7 @@ class NavigationService {
   }
 
   void navigateToTrackerdocforvalidationdetail(TrackerApplication document) {
-    _navigateTo(kTrackerdocforvalidationdetailRoute, arguments: {
+    _navigateTo(kTrackerapplicationdetailRoute, arguments: {
       'document': document,
       'documentId': document.id,
     });
@@ -120,6 +120,10 @@ class NavigationService {
 
   void navigateToSelectmodule() {
     _navigateToAndRemoveUntil(kSelectmoduleRoute);
+  }
+
+  void navigateToTrackerlist() {
+    _navigateTo(kTrackerlistRoute);
   }
 
   /// Check internet connection

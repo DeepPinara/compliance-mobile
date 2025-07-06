@@ -1,19 +1,19 @@
+import 'package:compliancenavigator/utils/colors.dart';
 import 'package:compliancenavigator/utils/constants.dart';
+import 'package:compliancenavigator/utils/dimensions.dart';
+import 'package:compliancenavigator/utils/enums.dart';
 import 'package:compliancenavigator/widgets/buttons/primary_button.dart';
+import 'package:compliancenavigator/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:compliancenavigator/utils/colors.dart';
-import 'package:compliancenavigator/utils/dimensions.dart';
+import 'trackerapplicationdetail_controller.dart';
 import 'package:compliancenavigator/widgets/app_bar.dart';
-import 'package:compliancenavigator/widgets/loading_indicator.dart';
-import 'trackerdocforvalidationdetail_controller.dart';
 
-const String kTrackerdocforvalidationdetailRoute =
-    '/trackerdocforvalidationdetail';
+const String kTrackerapplicationdetailRoute = '/trackerapplicationdetail';
 
-class TrackerdocforvalidationdetailScreen
-    extends GetView<TrackerdocforvalidationdetailController> {
-  const TrackerdocforvalidationdetailScreen({Key? key}) : super(key: key);
+class TrackerapplicationdetailScreen
+    extends GetWidget<TrackerapplicationdetailController> {
+  const TrackerapplicationdetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +22,8 @@ class TrackerdocforvalidationdetailScreen
         title: 'Application Details',
         showBackButton: true,
       ),
-      body: GetBuilder<TrackerdocforvalidationdetailController>(
-        id: TrackerdocforvalidationdetailController
-            .trackerdocforvalidationdetailScreenId,
+      body: GetBuilder<TrackerapplicationdetailController>(
+        id: TrackerapplicationdetailController.trackerapplicationdetailScreenId,
         builder: (controller) {
           if (controller.isLoading) {
             return const Center(child: LoadingIndicator());
@@ -48,7 +47,7 @@ class TrackerdocforvalidationdetailScreen
                   ),
                 ),
               ),
-              _buildActionButtons(controller),
+              _buildActionButton(controller)
             ],
           );
         },
@@ -56,8 +55,7 @@ class TrackerdocforvalidationdetailScreen
     );
   }
 
-  Widget _buildHeaderSection(
-      TrackerdocforvalidationdetailController controller) {
+  Widget _buildHeaderSection(TrackerapplicationdetailController controller) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -118,8 +116,7 @@ class TrackerdocforvalidationdetailScreen
     );
   }
 
-  Widget _buildDocumentDetails(
-      TrackerdocforvalidationdetailController controller) {
+  Widget _buildDocumentDetails(TrackerapplicationdetailController controller) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -157,7 +154,7 @@ class TrackerdocforvalidationdetailScreen
   }
 
   Widget _buildAttachmentsSection(
-      TrackerdocforvalidationdetailController controller) {
+      TrackerapplicationdetailController controller) {
     if (controller.document.files.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -193,8 +190,123 @@ class TrackerdocforvalidationdetailScreen
     );
   }
 
-  Widget _buildActionButtons(
-      TrackerdocforvalidationdetailController controller) {
+  Widget _buildActionButton(TrackerapplicationdetailController controller) {
+    final TrackerApplicationStatus status =
+        controller.document.applicationStatus;
+    // contractorDocPending,
+    // contractorDocPendingReview,
+    // contractorDocRequested,
+    // pending,
+    // approved,
+    // paymentPending,
+    // paymentReceived,
+    switch (status) {
+      case TrackerApplicationStatus.contractorDocPending:
+        return _buildStatusActionButton(
+          'Contractor Document Pending',
+          Icons.pending_actions,
+          Colors.orange,
+        );
+      case TrackerApplicationStatus.contractorDocPendingReview:
+        return _buildRejectApproveActionButtons(controller);
+      case TrackerApplicationStatus.contractorDocRequested:
+        return _buildStatusActionButton(
+          'Contractor Document Requested: Contact to Development Team',
+          Icons.pending_actions,
+          Colors.red,
+        );
+      case TrackerApplicationStatus.pending:
+        return _buildStatusActionButton(
+          'Pending',
+          Icons.pending_actions,
+          Colors.orange,
+        );
+      case TrackerApplicationStatus.approved:
+        return _buildStatusActionButton(
+          'Approved',
+          Icons.check_circle_outline,
+          Colors.green,
+        );
+      case TrackerApplicationStatus.paymentPending:
+        return _buildStatusActionButton(
+            'Payment Pending', Icons.payment, Colors.red);
+      case TrackerApplicationStatus.paymentReceived:
+        return _buildStatusActionButton(
+            'Payment Received', Icons.payment, Colors.green);
+    }
+  }
+
+  Widget _buildStatusActionButton(String text, IconData icon, Color color) {
+    return SafeArea(
+      bottom: true,
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+            horizontal: AppConstants.kAppScreenSpacing, vertical: 0),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withOpacity(0.3)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              text,
+              style: Get.textTheme.bodyMedium?.copyWith(
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDraftActionButton(
+      TrackerapplicationdetailController controller) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.kAppScreenSpacing,
+        vertical: 8,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: OutlinedButton(
+              onPressed: () {
+                // Handle edit action
+              },
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                side: BorderSide(color: Get.theme.primaryColor),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text('Edit'),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: PrimaryButton(
+              onPressed: () {
+                // Handle submit action
+              },
+              text: 'Submit',
+              width: double.infinity,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRejectApproveActionButtons(
+      TrackerapplicationdetailController controller) {
     return Container(
       decoration: BoxDecoration(
         color: Get.theme.colorScheme.surface,
@@ -382,8 +494,7 @@ class TrackerdocforvalidationdetailScreen
     }
   }
 
-  void _showRejectConfirmation(
-      TrackerdocforvalidationdetailController controller) {
+  void _showRejectConfirmation(TrackerapplicationdetailController controller) {
     Get.defaultDialog(
       title: 'Reject Document',
       content: Column(

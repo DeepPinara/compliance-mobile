@@ -1,57 +1,55 @@
-import 'package:compliancenavigator/utils/enums.dart';
+import 'package:compliancenavigator/data/models/tracker_application.dart';
+import 'package:compliancenavigator/utils/dimensions.dart';
 import 'package:compliancenavigator/utils/pagination/pagination_list_view.dart';
+import 'package:compliancenavigator/widgets/empty_state.dart';
+import 'package:compliancenavigator/widgets/error_state.dart';
+import 'package:compliancenavigator/widgets/loading_indicator.dart';
 import 'package:compliancenavigator/widgets/text_field.dart';
 import 'package:compliancenavigator/widgets/tracker_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:compliancenavigator/data/models/tracker_application.dart';
-import 'package:compliancenavigator/utils/colors.dart';
-import 'package:compliancenavigator/utils/dimensions.dart';
-import 'package:compliancenavigator/widgets/loading_indicator.dart';
-import 'package:compliancenavigator/widgets/empty_state.dart';
-import 'package:compliancenavigator/widgets/error_state.dart';
-import 'trackerdocforvalidation_controller.dart';
+import 'trackerlist_controller.dart';
+import 'package:compliancenavigator/widgets/app_bar.dart';
 import 'package:compliancenavigator/utils/pagination/infinite_scroll_view.dart'
     as pagination_mode;
 
-const String kTrackerdocforvalidationRoute = '/trackerdocforvalidation';
+const String kTrackerlistRoute = '/trackerlist';
 
-class TrackerdocforvalidationScreen
-    extends GetView<TrackerdocforvalidationController> {
-  const TrackerdocforvalidationScreen({Key? key}) : super(key: key);
+class TrackerlistScreen extends GetWidget<TrackerlistController> {
+  const TrackerlistScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Documents for Validation'),
+        title: const Text('Tracker List'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
         ),
       ),
-      body: GetBuilder<TrackerdocforvalidationController>(
-        id: TrackerdocforvalidationController.trackerdocforvalidationScreenId,
+      body: GetBuilder<TrackerlistController>(
+        id: TrackerlistController.trackerlistScreenId,
         builder: (controller) {
           return Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(AppDimensions.paddingDefault),
                 child: AppTextField(
-                  hint: 'Search documents...',
+                  hint: 'Search tracker...',
                   onChanged: (value) => controller.onSearch(value ?? ''),
                   controller: TextEditingController(),
                 ),
               ),
               Expanded(
-                child: PaginatedListView<TrackerdocforvalidationController,
+                child: PaginatedListView<TrackerlistController,
                     TrackerApplication>(
                   controller: controller,
                   items: controller.items,
                   itemBuilder: (context, document, index) =>
                       _buildDocumentCard(document, controller),
                   emptyWidget: const Center(
-                    child: Text('No documents found'),
+                    child: Text('No tracker found'),
                   ),
                   padding: const EdgeInsets.all(16),
                   loadingWidget: const Center(
@@ -71,8 +69,8 @@ class TrackerdocforvalidationScreen
     );
   }
 
-  Widget _buildDocumentCard(TrackerApplication document,
-      TrackerdocforvalidationController controller) {
+  Widget _buildDocumentCard(
+      TrackerApplication document, TrackerlistController controller) {
     return buildTrackerCard(
       tracker: document,
       ontap: () {
@@ -84,15 +82,15 @@ class TrackerdocforvalidationScreen
 
   Widget _buildEmptyState() {
     return EmptyState(
-      title: 'No Documents Found',
-      message: 'There are no documents to validate at the moment.',
+      title: 'No Tracker Found',
+      message: 'There are no tracker to validate at the moment.',
       onRetry: () {},
     );
   }
 
   Widget _buildErrorState() {
     return ErrorState(
-      title: 'Error Loading Documents',
+      title: 'Error Loading Tracker',
       message: 'An unknown error occurred',
       onRetry: () {},
     );

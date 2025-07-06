@@ -1,5 +1,5 @@
 // Generated file. Do not edit.
-// Generated on 2025-07-05 12:39:10.293101
+// Generated on 2025-07-06 21:13:45.289887
 
 const String dImagesLogo01 = 'assets/images/logo-01.png';
 const String dImagesLogo012 = 'assets/images/logo-01_(2).png';
@@ -17,6 +17,7 @@ const String dSvgsCheckCircle = 'assets/svgs/checkCircle.svg';
 const String dSvgsCheckedVerified = 'assets/svgs/checked_verified.svg';
 const String dSvgsCheckmarkDateCalendarBlackIcon = 'assets/svgs/checkmark_date_calendar_black_icon.svg';
 const String dSvgsExpierence = 'assets/svgs/expierence.svg';
+const String dSvgsFormSvgrepoCom = 'assets/svgs/form-svgrepo-com.svg';
 const String dSvgsGoogleCalendar = 'assets/svgs/google_calendar.svg';
 const String dSvgsGoogleLogin = 'assets/svgs/google_login.svg';
 const String dSvgsHomeMenu = 'assets/svgs/home_menu.svg';

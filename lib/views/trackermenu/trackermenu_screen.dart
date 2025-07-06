@@ -26,8 +26,12 @@ class TrackermenuScreen extends GetWidget<TrackermenuController> {
                     controller.navigationService.navigateToCreateTracker();
                   }),
                   // Doc for Validations
-                  _buildMenuItem(Icons.create, 'Doc for Validations', () {
+                  _buildMenuItem(Icons.line_style_sharp, 'Doc for Validations', () {
                     controller.navigationService.navigateToTrackerdocforvalidation();
+                  }),
+                  // Tracker List
+                  _buildMenuItem(Icons.list, 'Tracker List', () {
+                    controller.navigationService.navigateToTrackerlist();
                   }),
                 ],
               ),

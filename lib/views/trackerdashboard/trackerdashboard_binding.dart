@@ -6,6 +6,7 @@ import 'package:compliancenavigator/modules/tracker/tracker_repository.dart';
 import 'package:compliancenavigator/modules/user/user_repository.dart';
 import 'package:compliancenavigator/views/home/home_controller.dart';
 import 'package:compliancenavigator/views/profile/profile_controller.dart';
+import 'package:compliancenavigator/views/trackerhome/trackerhome_controller.dart';
 import 'package:compliancenavigator/views/trackermenu/trackermenu_controller.dart';
 import 'package:get/get.dart';
 import 'trackerdashboard_controller.dart';
@@ -25,8 +26,8 @@ class TrackerdashboardBinding extends Bindings {
     final DashboardRepository dashboardRepository =
         Get.find<DashboardRepository>();
 
-    Get.lazyPut<HomeController>(
-      () => HomeController(
+    Get.lazyPut<TrackerhomeController>(
+      () => TrackerhomeController(
         dashboardRepository: dashboardRepository,
         navigationService: navigationService,
       ),
@@ -46,7 +47,7 @@ class TrackerdashboardBinding extends Bindings {
 
     Get.lazyPut<TrackerdashboardController>(
       () => TrackerdashboardController(
-        homeController: Get.find<HomeController>(),
+        homeController: Get.find<TrackerhomeController>(),
       ),
     );
   }

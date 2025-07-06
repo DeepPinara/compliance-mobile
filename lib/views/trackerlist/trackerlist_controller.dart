@@ -6,16 +6,14 @@ import 'package:compliancenavigator/modules/tracker/tracker_repository.dart';
 import 'package:compliancenavigator/utils/pagination/pagination_mixin.dart';
 import 'package:get/get.dart';
 
-class TrackerdocforvalidationController extends GetxController
-    with PaginationMixin {
-  static const String trackerdocforvalidationScreenId =
-      'trackerdocforvalidation_screen';
+class TrackerlistController extends GetxController with PaginationMixin {
+  static const String trackerlistScreenId = 'Trackerlist_screen';
 
   final TrackerRepository _trackerRepository;
   final NetworkService _networkService;
   final NavigationService navigationService;
 
-  TrackerdocforvalidationController({
+  TrackerlistController({
     required TrackerRepository trackerRepository,
     required NetworkService networkService,
     required this.navigationService,
@@ -57,11 +55,11 @@ class TrackerdocforvalidationController extends GetxController
     }
 
     _isLoading = true;
-    update([trackerdocforvalidationScreenId]);
+    update([trackerlistScreenId]);
 
     try {
       final ListApiResponse<TrackerApplication> response =
-          await _trackerRepository.fetchTrackerdocforvalidation(
+          await _trackerRepository.fetchTrackerForAdmin(
         page: _currentPage,
         limit: itemsPerPage,
       );
@@ -80,14 +78,14 @@ class TrackerdocforvalidationController extends GetxController
         // Check if we've reached the end of the list
         _hasReachedEnd = _documents.length >= totalCount;
         _currentPage++;
-        update([trackerdocforvalidationScreenId]);
+        update([trackerlistScreenId]);
       }
     } catch (e) {
       Get.snackbar('Error', e.toString());
     } finally {
       _isLoading = false;
       _isRefresh = false;
-      update([trackerdocforvalidationScreenId]);
+      update([trackerlistScreenId]);
     }
   }
 

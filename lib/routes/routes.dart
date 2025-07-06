@@ -109,9 +109,25 @@ class Routes {
             milliseconds: AppConstants.kScreenTransitionDuration),
       ),
       GetPage(
-        name: kTrackerdocforvalidationdetailRoute,
-        page: () => const TrackerdocforvalidationdetailScreen(),
-        binding: TrackerdocforvalidationdetailBinding(),
+        name: kTrackerapplicationdetailRoute,
+        page: () => const TrackerapplicationdetailScreen(),
+        binding: TrackerapplicationdetailBinding(),
+        transition: AppConstants.kScreenTransitionType,
+        transitionDuration: const Duration(
+            milliseconds: AppConstants.kScreenTransitionDuration),
+      ),
+      GetPage(
+        name: kTrackerlistRoute,
+        page: () => const TrackerlistScreen(),
+        binding: TrackerlistBinding(),
+        transition: AppConstants.kScreenTransitionType,
+        transitionDuration: const Duration(
+            milliseconds: AppConstants.kScreenTransitionDuration),
+      ),
+      GetPage(
+        name: kTrackerhomeRoute,
+        page: () => const TrackerhomeScreen(),
+        binding: TrackerhomeBinding(),
         transition: AppConstants.kScreenTransitionType,
         transitionDuration: const Duration(
             milliseconds: AppConstants.kScreenTransitionDuration),

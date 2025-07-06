@@ -1,5 +1,6 @@
 import 'package:compliancenavigator/utils/images.dart';
 import 'package:compliancenavigator/views/home/home_controller.dart';
+import 'package:compliancenavigator/views/trackerhome/trackerhome_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +9,7 @@ class TrackerdashboardController extends GetxController
   static const String trackerdashboardScreenId = 'Trackerdashboard_screen';
   late TabController tabController;
 
-  final HomeController homeController;
+  final TrackerhomeController homeController;
 
   TrackerdashboardController({
     required this.homeController,
@@ -19,7 +20,7 @@ class TrackerdashboardController extends GetxController
 
   final List<String> labels = ['Home', 'Menu', 'Team', 'Profile'];
   final List<String> images = [
-    dSvgsHomeMenu,
+    dSvgsFormSvgrepoCom,
     dSvgsMenu,
     dSvgsTeamManagement,
     dSvgsUserMenu
