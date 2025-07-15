@@ -22,10 +22,13 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
 
-    if (kDebugMode) {
-      emailController.text = 'deepinara10@gmail.com';
-      passwordController.text = 'Deep@12345';
-    }
+    // if (kDebugMode) {
+      // emailController.text = 'deepinara@gmail.com';
+      // passwordController.text = 'Deep@12345';
+
+      emailController.text = 'admin@gmail.com';
+      passwordController.text = 'pass@123';
+    // }
   }
 
   @override

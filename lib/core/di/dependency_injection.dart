@@ -10,6 +10,7 @@ import 'package:compliancenavigator/data/services/network_service.dart';
 import 'package:compliancenavigator/data/services/storage_service.dart';
 import 'package:compliancenavigator/modules/auth/auth_repository.dart';
 import 'package:compliancenavigator/modules/dashboard/dashboard_repository.dart';
+import 'package:compliancenavigator/modules/logs/logs_repository.dart';
 import 'package:compliancenavigator/modules/principle/principle_repository.dart';
 import 'package:compliancenavigator/modules/tracker/tracker_repository.dart';
 import 'package:compliancenavigator/modules/user/user_repository.dart';
@@ -62,6 +63,16 @@ class DependencyInjection {
     // Services
     Get.lazyPut<BackendApiCallService>(
       () => BackendApiCallService(),
+      fenix: true,
+    );
+
+    // LogsRepository
+    Get.lazyPut<LogsRepository>(
+      () => LogsRepository(
+        backendApiClient: Get.find<BackendApiCallService>(),
+        networkService: Get.find<NetworkService>(),
+        storageService: Get.find<StorageService>(),
+      ),
       fenix: true,
     );
 

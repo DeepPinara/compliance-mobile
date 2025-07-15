@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:compliancenavigator/data/models/user.dart';
 import 'package:compliancenavigator/utils/enums.dart';
 
@@ -16,7 +18,7 @@ class StorageService {
 
   // logs
   void logger(String message) {
-    // log('StorageService: $message');
+    log('StorageService: $message');
   }
 
   // Token Management
@@ -55,6 +57,7 @@ class StorageService {
   Future<void> clearAuthData() async {
     await clearTokens();
     await clearUser();
+    await clearAll();
     logger('clearAuthData');
   }
 

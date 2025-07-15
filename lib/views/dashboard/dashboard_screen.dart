@@ -59,7 +59,8 @@ class DLBottomNavigationBar extends GetWidget<DashboardController> {
               ),
               child: Padding(
                 padding: const EdgeInsets.only(
-                  top: 8.0,
+                  top: 10,
+                  bottom: 10,
                 ),
                 child: TabBar(
                   indicatorColor: Colors.transparent,

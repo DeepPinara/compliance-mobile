@@ -18,6 +18,11 @@ class ApiEndpoints {
   static const String companyNames = "$company/get-company-names";
   static String companyByCode(String code) => "$companyNames/$code";
   static String companyById(int id) => "$company/$id";
+
+  // logs endpoints
+  static const String logs = "$apiBase/logs";
+  static String logsById(int id) => "$logs/$id";
+  static String logsByUser(int userId) => "$logs/user/$userId";
   
   // Contractor endpoints
   static const String contractor = "$apiBase/contractor";

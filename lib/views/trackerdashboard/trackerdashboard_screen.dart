@@ -24,7 +24,14 @@ class TrackerdashboardScreen extends GetWidget<TrackerdashboardController> {
               children: [
                 const TrackerhomeScreen(),
                 const TrackermenuScreen(),
-                Container(),
+                Center(
+                  child: Text('Coming Soon...',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Get.theme.colorScheme.primary,
+                      )),
+                ),
                 const ProfileScreen(),
               ],
             );

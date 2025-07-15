@@ -1,6 +1,7 @@
 import 'package:compliancenavigator/data/services/navigation_service/navigation_import.dart';
 import 'package:compliancenavigator/modules/auth/auth_repository.dart';
 import 'package:compliancenavigator/modules/dashboard/dashboard_repository.dart';
+import 'package:compliancenavigator/modules/logs/logs_repository.dart';
 import 'package:compliancenavigator/modules/user/user_repository.dart';
 import 'package:compliancenavigator/views/compliancemenu/compliancemenu_controller.dart';
 import 'package:compliancenavigator/views/home/home_controller.dart';
@@ -15,8 +16,10 @@ class DashboardBinding extends Bindings {
     final UserRepository userRepository = Get.find<UserRepository>();
     final AuthRepository authRepository = Get.find<AuthRepository>();
     final NavigationService navigationService = Get.find<NavigationService>();
+    final LogsRepository logsRepository = Get.find<LogsRepository>();
 
     userRepository.syncCurrentUser();
+    logsRepository.startLogs();
 
     final DashboardRepository dashboardRepository =
         Get.find<DashboardRepository>();

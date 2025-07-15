@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:compliancenavigator/data/services/navigation_service/navigation_import.dart';
 import 'package:compliancenavigator/modules/auth/auth_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
@@ -62,13 +63,24 @@ class DioInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (enableErrorLogs) {
       _logError(err);
     }
-   // Error = 401 unauthorised navigate to login
-    if (err.response?.statusCode == 401) {
-      getx.Get.offAllNamed('/login');
+    // Error = 401 unauthorised navigate to login
+    // if (err.response?.statusCode == 401) {
+    //   getx.Get.offAllNamed('/login');
+    // }
+    if (err.response?.statusCode == 401 ||
+        err.response?.statusCode == 404 ||
+        err.response?.statusCode == 403 ||
+        err.response?.statusCode == 400 ||
+        err.response?.statusCode == 500) {
+      // Get the authentication client from your dependency injection
+      final authClient = getx.Get.find<AuthRepository>();
+      await authClient.logout();
+      final navigationService = getx.Get.find<NavigationService>();
+      navigationService.logOut();
     }
     handler.next(err);
   }

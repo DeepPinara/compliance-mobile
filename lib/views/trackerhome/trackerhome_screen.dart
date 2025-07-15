@@ -22,6 +22,17 @@ class TrackerhomeScreen extends GetView<TrackerhomeController> {
     return Scaffold(
       appBar: DLAppBar(
         title: 'Tracker Overview',
+        suffixWidget: Row(
+          children: [
+            // Select module
+            InkWell(
+              child: Icon(Icons.assignment_turned_in_rounded),
+              onTap: () {
+                controller.navigationService.navigateToSelectmodule();
+              },
+            ),
+          ],
+        ),
       ),
       body: GetBuilder<TrackerhomeController>(
         id: TrackerhomeController.trackerhomeScreenId,

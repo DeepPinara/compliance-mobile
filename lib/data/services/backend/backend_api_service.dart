@@ -229,6 +229,20 @@ class BackendApiCallService {
     );
   }
 
+  // ==================== Logs APIs ====================
+
+  Future<ApiResponse<void>> createLog() async {
+    return await _apiService.post<ApiResponse<void>>(
+      ApiEndpoints.logs,
+      data: {},
+      fromJson: (data) => ApiResponse.fromJson(
+        data,
+        (json) => {},
+      ),
+    );
+  }
+
+
   // ==================== Bug Report APIs ====================
 
   Future<ApiResponse<BugReport>> createBugReport(BugReport bugReport) async {

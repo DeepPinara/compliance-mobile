@@ -1,5 +1,6 @@
 import 'package:compliancenavigator/data/models/dashboard_data.dart';
 import 'package:compliancenavigator/widgets/app_bar.dart';
+import 'package:compliancenavigator/widgets/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +20,7 @@ class HomeScreen extends GetWidget<HomeController> {
           children: [
             // Select module
             InkWell(
-              child: Icon(Icons.menu),
+              child: Icon(Icons.track_changes_rounded),
               onTap: () {
                 controller.navigationService.navigateToSelectmodule();
               },
@@ -31,7 +32,7 @@ class HomeScreen extends GetWidget<HomeController> {
         id: HomeController.homeScreenId,
         builder: (controller) {
           if (controller.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildShimmerLoading();
           }
 
           if (controller.error.isNotEmpty) {
@@ -71,6 +72,85 @@ class HomeScreen extends GetWidget<HomeController> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildShimmerLoading() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Stats Row Shimmer
+          Row(
+            children: [
+              Expanded(
+                child: ShimmerCard(
+                  height: 100,
+                  borderRadius: 12,
+                  margin: const EdgeInsets.only(right: 8, bottom: 16),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: ShimmerCard(
+                  height: 100,
+                  borderRadius: 12,
+                  margin: const EdgeInsets.only(bottom: 16),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: ShimmerCard(
+                  height: 100,
+                  borderRadius: 12,
+                  margin: const EdgeInsets.only(right: 8, bottom: 16),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: ShimmerCard(
+                  height: 100,
+                  borderRadius: 12,
+                  margin: const EdgeInsets.only(bottom: 16),
+                ),
+              ),
+            ],
+          ),
+          
+          // Gender Ratio Card Shimmer
+          ShimmerCard(
+            height: 180,
+            borderRadius: 12,
+            margin: const EdgeInsets.only(bottom: 28),
+          ),
+          
+          // Expiring Contracts Header Shimmer
+          ShimmerCard(
+            height: 24,
+            width: 200,
+            borderRadius: 4,
+            margin: const EdgeInsets.only(bottom: 16),
+          ),
+          
+          // Expiring Contracts List Shimmer
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: 3,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: ShimmerCard(
+                height: 80,
+                borderRadius: 12,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
