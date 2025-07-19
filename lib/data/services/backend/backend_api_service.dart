@@ -33,6 +33,17 @@ class BackendApiCallService {
 
   // ==================== Tracker API ====================
 
+  /// Get dashboard data
+  Future<ApiResponse<Map<String, dynamic>>> trackerDashboardStats() async {
+    return await _apiService.get<ApiResponse<Map<String, dynamic>>>(
+      ApiEndpoints.trackerDashboardStats,
+      fromJson: (data) => ApiResponse.fromJson(
+        data,
+        (json) => json as Map<String, dynamic>,
+      ),
+    );
+  }
+
   /// Create a new tracker
   Future<CreateTrackerResponse> createTrackerApplication(
       CreateTrackerRequest request) async {

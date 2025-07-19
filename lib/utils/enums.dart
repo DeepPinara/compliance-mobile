@@ -169,4 +169,13 @@ extension TrackerApplicationStatusExtension on TrackerApplicationStatus {
         return 'payment_received';
     }
   }
+
+  static List<String> get allStatuses {
+    final statuses = ['All'];
+    statuses.addAll(TrackerApplicationStatus.values
+        .map((e) => e.displayName)
+        .toList());
+   
+    return statuses;
+  }
 }

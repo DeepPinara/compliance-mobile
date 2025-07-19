@@ -180,7 +180,7 @@ class DLBaseBottomSheet extends StatelessWidget {
           ),
         ),
         child: const Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(7),
           child: Center(
             child: Icon(
               Icons.close,

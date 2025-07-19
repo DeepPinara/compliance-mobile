@@ -1,3 +1,4 @@
+import 'package:compliancenavigator/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -5,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:compliancenavigator/widgets/app_bar.dart';
 import 'package:compliancenavigator/widgets/custom_card.dart';
 import 'trackerhome_controller.dart';
+import 'package:compliancenavigator/widgets/bottom_sheet.dart'; // Added import for DLBaseBottomSheet
 
 // App colors definition since we're not using the theme file
 const Color primaryColor = Color(0xFF2196F3);
@@ -88,38 +90,23 @@ class TrackerhomeScreen extends GetView<TrackerhomeController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Text(
-          //       'Welcome Back!',
-          //       style: theme.textTheme.titleLarge?.copyWith(
-          //         fontWeight: FontWeight.w600,
-          //         color: theme.primaryColor,
-          //       ),
-          //     ),
-          //     Container(
-          //       decoration: BoxDecoration(
-          //         color: theme.primaryColor.withOpacity(0.1),
-          //         borderRadius: BorderRadius.circular(20),
-          //       ),
-          //       child: IconButton(
-          //         icon: Icon(Icons.refresh, color: theme.primaryColor),
-          //         onPressed: controller.fetchDashboardData,
-          //         tooltip: 'Refresh',
-          //         padding: const EdgeInsets.all(8.0),
-          //         constraints: const BoxConstraints(),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          const SizedBox(height: 4),
-          Text(
-            'Here\'s your tracker overview',
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.hintColor,
-              fontWeight: FontWeight.w400,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Here\'s your tracker overview',
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: theme.hintColor,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.filter_alt_rounded,
+                    color: Colors.blueAccent),
+                tooltip: 'Filter',
+                onPressed: () => _showFilterBottomSheet(),
+              ),
+            ],
           ),
           const SizedBox(height: 4),
           Row(
@@ -139,6 +126,320 @@ class TrackerhomeScreen extends GetView<TrackerhomeController> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  void _showFilterBottomSheet() {
+    DLBaseBottomSheet.show(
+      title: 'Filter Tracker',
+      child: SizedBox(
+          height: Get.size.height * 0.75, child: _buildFilterContent()),
+      isTitleCenter: true,
+    );
+  }
+
+  Widget _buildFilterContent() {
+    final List<String> statusOptions =
+        TrackerApplicationStatusExtension.allStatuses;
+    final List<String> appTypeOptions =
+        TrackerApplicationType.values.map((e) => e.displayName).toList();
+    final List<String> paymentOptions = ['All', 'Yes', 'No'];
+
+    Set<String> selectedStatus = {'All'};
+    Set<String> selectedAppTypes = {};
+    String selectedPayment = 'All';
+    Set<String> selectedPrincipals = {};
+    DateTime? fromDate;
+    DateTime? toDate;
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        Widget chipWrap(
+            List<String> options, Set<String> selected, String label,
+            {bool multi = true}) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: options.map((option) {
+                  final isSelected = selected.contains(option);
+                  return FilterChip(
+                    label: Text(option),
+                    selected: isSelected,
+                    onSelected: (val) {
+                      setState(() {
+                        if (multi) {
+                          if (val) {
+                            selected.add(option);
+                            if (selected.contains('All')) {
+                              selected.remove('All');
+                            }
+                            if (option == 'All') {
+                              selected.clear();
+                              selected.add('All');
+                            }
+                          } else {
+                            selected.remove(option);
+                          }
+                        } else {
+                          selected.clear();
+                          if (val) selected.add(option);
+                        }
+                      });
+                    },
+                    selectedColor: Colors.blue.shade100,
+                    checkmarkColor: Colors.blue,
+                    labelStyle: TextStyle(
+                      color: isSelected ? Colors.blue.shade800 : Colors.black87,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 8),
+            ],
+          );
+        }
+
+        Widget choiceChipRow(List<String> options, String selected,
+            String label, void Function(String) onChanged) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: options.map((option) {
+                  final isSelected = selected == option;
+                  return ChoiceChip(
+                    label: Text(option),
+                    selected: isSelected,
+                    onSelected: (_) => setState(() => onChanged(option)),
+                    selectedColor: Colors.blue.shade100,
+                    checkmarkColor: Colors.blue,
+                    labelStyle: TextStyle(
+                      color: isSelected ? Colors.blue.shade800 : Colors.black87,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 8),
+            ],
+          );
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Date Range
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _dateChip(
+                                  context,
+                                  'From',
+                                  fromDate,
+                                  (picked) =>
+                                      setState(() => fromDate = picked)),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _dateChip(context, 'To', toDate,
+                                  (picked) => setState(() => toDate = picked)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Application Type (multi-select)
+                      chipWrap(
+                          appTypeOptions, selectedAppTypes, 'Application Type'),
+                      // Payment Received (single select)
+                      choiceChipRow(
+                          paymentOptions,
+                          selectedPayment,
+                          'Payment Received',
+                          (val) => setState(() => selectedPayment = val)),
+
+                      // Status (single select)
+                      chipWrap(statusOptions, selectedStatus, 'Status'),
+                    ],
+                  ),
+                ),
+              ),
+              // Action Buttons
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                ),
+                child: SafeArea(
+                  bottom: true,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          onPressed: () {
+                            // TODO: Apply filter logic
+                            Get.back();
+                          },
+                          child: const Text('Apply',
+                              style: TextStyle(fontSize: 16)),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              selectedStatus.clear();
+                              selectedStatus.add('All');
+                              selectedAppTypes.clear();
+                              selectedPayment = 'All';
+                              selectedPrincipals.clear();
+                              fromDate = null;
+                              toDate = null;
+                            });
+                          },
+                          child: const Text('Reset',
+                              style: TextStyle(fontSize: 16)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _dateChip(BuildContext context, String label, DateTime? date,
+      ValueChanged<DateTime> onPicked) {
+    return InkWell(
+      onTap: () async {
+        final picked = await showDatePicker(
+          context: context,
+          initialDate: date ?? DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2100),
+          builder: (context, child) {
+            return Theme(
+              data: Theme.of(context).copyWith(
+                colorScheme: const ColorScheme.light(
+                  primary: Colors.blue, // header, selected day
+                  onPrimary: Colors.white, // text on header, selected day
+                  onSurface: Colors.blueGrey, // default text color
+                ),
+                textButtonTheme: TextButtonThemeData(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.blueAccent, // button text color
+                  ),
+                ),
+                dialogBackgroundColor: Colors.white,
+              ),
+              child: child!,
+            );
+          },
+        );
+        if (picked != null) onPicked(picked);
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blue.shade200),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.calendar_today, size: 18, color: Colors.blue.shade400),
+            const SizedBox(width: 8),
+            Text(
+              date != null ? DateFormat('yyyy-MM-dd').format(date) : label,
+              style: TextStyle(
+                color: date != null ? Colors.blue.shade800 : Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _filterDropdown(String label, List<String> options, String? selected,
+      ValueChanged<String?>? onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
+          const SizedBox(height: 4),
+          DropdownButtonFormField<String>(
+            value: selected,
+            items: options
+                .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                .toList(),
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _datePickerField(BuildContext context,
+      {required String label, DateTime? date, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AbsorbPointer(
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: label,
+            hintText: 'Select date',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            suffixIcon: const Icon(Icons.calendar_today, size: 18),
+          ),
+          controller: TextEditingController(
+              text: date != null ? DateFormat('yyyy-MM-dd').format(date) : ''),
+        ),
       ),
     );
   }

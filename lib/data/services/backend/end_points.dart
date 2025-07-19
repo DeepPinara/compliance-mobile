@@ -36,6 +36,9 @@ class ApiEndpoints {
   // Dashboard endpoints
   static const String dashboard = "$apiBase/dashboard";
   static const String dashboardTeams = "$dashboard/teams";
+
+  // Tracker Dashboard endpoints
+  static const String trackerDashboardStats = "$dashboard/stats";
   
   // File Upload endpoints
   static const String fileUpload = "$apiBase/file-upload";

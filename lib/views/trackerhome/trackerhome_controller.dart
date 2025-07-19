@@ -1,9 +1,9 @@
+import 'package:compliancenavigator/modules/tracker/tracker_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:compliancenavigator/data/models/dashboard_stats_model.dart';
 import 'package:compliancenavigator/data/services/navigation_service/navigation_import.dart';
-import 'package:compliancenavigator/modules/dashboard/dashboard_repository.dart';
 
 // Data classes for charts and UI
 // Data class for chart items
@@ -45,7 +45,7 @@ extension StringExtension on String {
 class TrackerhomeController extends GetxController {
   static const String trackerhomeScreenId = 'tracker_home_screen';
 
-  final DashboardRepository dashboardRepository;
+  final TrackerRepository trackerRepository;
   final NavigationService navigationService;
 
   // Controller state
@@ -72,7 +72,7 @@ class TrackerhomeController extends GetxController {
   DashboardStats? get dashboardData => _dashboardData;
   
   TrackerhomeController({
-    required this.dashboardRepository,
+    required this.trackerRepository,
     required this.navigationService,
   });
 
@@ -106,11 +106,11 @@ class TrackerhomeController extends GetxController {
       update([trackerhomeScreenId]);
       
       // TODO: Replace with actual API call
-      // final response = await dashboardRepository.getDashboardData();
+      // final response = await trackerRepository.getTrackerDashboardStats();
       // _dashboardData = response;
       
       // Mock data for now
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 500));
       
       // Prepare chart data
       _prepareChartData();

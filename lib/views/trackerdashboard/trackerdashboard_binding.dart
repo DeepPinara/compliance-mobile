@@ -28,7 +28,7 @@ class TrackerdashboardBinding extends Bindings {
 
     Get.lazyPut<TrackerhomeController>(
       () => TrackerhomeController(
-        dashboardRepository: dashboardRepository,
+        trackerRepository: trackerRepository,
         navigationService: navigationService,
       ),
     );

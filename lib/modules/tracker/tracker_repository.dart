@@ -21,6 +21,19 @@ class TrackerRepository {
         _networkService = networkService,
         _fileUploadService = fileUploadService;
 
+  // Get tracker dashboard stats
+  Future<Map<String, dynamic>> getTrackerDashboardStats() async {
+    try {
+      await _networkService.checkInternetConnection();
+      final response = await _backendApiClient.trackerDashboardStats();
+      return response.data;
+    } on NetworkException catch (e) {
+      throw e.message;
+    } catch (e) {
+      throw 'Failed to get tracker dashboard stats: $e';
+    }
+  }
+
   Future<CreateTrackerResponse> createTrackerApplication(
     CreateTrackerRequest createTrackerRequest,
   ) async {
