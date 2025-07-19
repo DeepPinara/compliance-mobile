@@ -55,7 +55,7 @@ class LoginController extends GetxController {
 
       showSnackBar('Login successful', isSuccess: true);
 
-      navigationService.navigateToDashboard();
+      navigationService.navigateToSelectmodule();
     } catch (e) {
       showSnackBar(e.toString(), isSuccess: false);
     } finally {

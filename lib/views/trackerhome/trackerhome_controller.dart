@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:compliancenavigator/modules/tracker/tracker_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,12 +54,13 @@ class TrackerhomeController extends GetxController {
   bool _isLoading = true;
   String? _error;
   DashboardStats? _dashboardData;
-  
+
   // Chart data
   final List<ChartData> statusChartData = [];
   final List<PendingData> pendingData = [];
   final List<PrincipalData> topPrincipalsData = [];
-  
+  final List<String> applicationStatusChart = [];
+
   // Status colors mapping
   final Map<String, Color> statusColors = {
     'Completed': Colors.green,
@@ -65,12 +68,12 @@ class TrackerhomeController extends GetxController {
     'Pending': Colors.orange,
     'Overdue': Colors.red,
   };
-  
+
   // Getters
   bool get isLoading => _isLoading;
   String? get error => _error;
   DashboardStats? get dashboardData => _dashboardData;
-  
+
   TrackerhomeController({
     required this.trackerRepository,
     required this.navigationService,
@@ -81,7 +84,7 @@ class TrackerhomeController extends GetxController {
     super.onInit();
     fetchDashboardData();
   }
-  
+
   // Update state and refresh UI
   void _updateState({
     bool? isLoading,
@@ -94,27 +97,27 @@ class TrackerhomeController extends GetxController {
       _dashboardData = dashboardData;
       _prepareChartData();
     }
-    
+
     // Update UI with the specific screen ID
     update([trackerhomeScreenId]);
   }
-  
+
   // Fetch dashboard data
   Future<void> fetchDashboardData() async {
     try {
       _isLoading = true;
       update([trackerhomeScreenId]);
-      
+
       // TODO: Replace with actual API call
       // final response = await trackerRepository.getTrackerDashboardStats();
       // _dashboardData = response;
-      
+
       // Mock data for now
       await Future.delayed(const Duration(milliseconds: 500));
-      
+
       // Prepare chart data
       _prepareChartData();
-      
+
       _isLoading = false;
       update([trackerhomeScreenId]);
     } catch (e) {
@@ -123,20 +126,20 @@ class TrackerhomeController extends GetxController {
       update([trackerhomeScreenId]);
     }
   }
-  
+
   // Refresh data
   Future<void> refreshData() async {
     await fetchDashboardData();
   }
-  
+
   // Get pie chart sections for application status
   List<PieChartSectionData> getPieChartSections() {
     if (statusChartData.isEmpty) return [];
-    
+
     return statusChartData.map((data) {
       final total = statusChartData.fold(0.0, (sum, item) => sum + item.value);
       final percentage = (data.value / total * 100).toStringAsFixed(1);
-      
+
       return PieChartSectionData(
         color: data.color,
         value: data.value,
@@ -150,7 +153,7 @@ class TrackerhomeController extends GetxController {
       );
     }).toList();
   }
-  
+
   // Get status color based on activity type
   Color _getStatusColor(String status) {
     return statusColors[status] ?? Colors.grey;
@@ -163,14 +166,14 @@ class TrackerhomeController extends GetxController {
     if (range.contains('8-15')) return const Color(0xFF3B82F6); // blue
     return const Color(0xFF8B5CF6); // purple (default for 0-7 range)
   }
-  
+
   // Prepare chart data
   void _prepareChartData() {
     // Clear existing data
     statusChartData.clear();
     pendingData.clear();
     topPrincipalsData.clear();
-    
+
     if (_dashboardData != null) {
       // TODO: Uncomment and implement with actual data from _dashboardData
       /*
@@ -218,18 +221,27 @@ class TrackerhomeController extends GetxController {
         ChartData('Pending', 15, _getStatusColor('Pending')),
         ChartData('Overdue', 10, _getStatusColor('Overdue')),
       ]);
-      
+
       pendingData.addAll([
         PendingData('0-7', 5, _getPendingColor('0-7')),
         PendingData('8-15', 10, _getPendingColor('8-15')),
         PendingData('16-30', 8, _getPendingColor('16-30')),
         PendingData('30+', 3, _getPendingColor('30+')),
       ]);
-      
+
       topPrincipalsData.addAll([
         PrincipalData('Principal 1', 15, 0.75, _getStatusColor('In Progress')),
         PrincipalData('Principal 2', 10, 0.50, _getStatusColor('In Progress')),
       ]);
     }
+  }
+
+  void updateApplicationStatusChart({required String selectedvalue}) {
+    if (applicationStatusChart.contains(selectedvalue)) {
+      applicationStatusChart.remove(selectedvalue);
+    } else {
+      applicationStatusChart.add(selectedvalue);
+    }
+    update([trackerhomeScreenId]);
   }
 }

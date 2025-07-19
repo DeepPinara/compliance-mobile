@@ -8,10 +8,6 @@ import 'package:compliancenavigator/widgets/custom_card.dart';
 import 'trackerhome_controller.dart';
 import 'package:compliancenavigator/widgets/bottom_sheet.dart'; // Added import for DLBaseBottomSheet
 
-// App colors definition since we're not using the theme file
-const Color primaryColor = Color(0xFF2196F3);
-const Color dangerColor = Color(0xFFF44336);
-
 const String kTrackerhomeRoute = '/trackerhome';
 
 class TrackerhomeScreen extends GetView<TrackerhomeController> {
@@ -61,18 +57,17 @@ class TrackerhomeScreen extends GetView<TrackerhomeController> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Left Column - Chart
-                            _buildChartSection(theme, controller),
-
                             // Right Column - Pending Actions and Top Principals
                             Column(
                               children: [
-                                const SizedBox(height: 16),
                                 _buildPendingActions(theme, controller),
                                 const SizedBox(height: 16),
                                 _buildRecentActivity(theme, controller),
+                                const SizedBox(height: 16),
                               ],
                             ),
+                            // Left Column - Chart
+                            _buildChartSection(theme, controller),
                           ],
                         ),
                       ],
@@ -659,6 +654,10 @@ class TrackerhomeScreen extends GetView<TrackerhomeController> {
               }).toList(),
             ),
           ),
+
+          // Status chips below the chart
+          const SizedBox(height: 16),
+          _buildStatusChips(controller),
         ],
       ),
     );
@@ -749,7 +748,7 @@ class TrackerhomeScreen extends GetView<TrackerhomeController> {
               },
               style: TextButton.styleFrom(
                 foregroundColor: theme.primaryColor,
-                padding: EdgeInsets.zero,
+                padding: const EdgeInsets.all(4),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: const Text('View All Pending Items'),
@@ -888,5 +887,48 @@ class TrackerhomeScreen extends GetView<TrackerhomeController> {
         ),
       ],
     );
+  }
+
+  Widget _buildStatusChips(TrackerhomeController controller) {
+    final List<String> statusOptions =
+        TrackerApplicationStatus.values.map((e) => e.displayName).toList();
+    // Use a local state for selected chips
+    return GetBuilder<TrackerhomeController>(
+        id: TrackerhomeController.trackerhomeScreenId,
+        builder: (context) {
+          return Wrap(
+            children: statusOptions.map((status) {
+              // Find color from chart data if available, else use blue
+              final chartData = controller.statusChartData
+                  .firstWhereOrNull((d) => d.label == status);
+              final color = chartData?.color ?? Colors.blue.shade200;
+              final isSelected =
+                  controller.applicationStatusChart.contains(status);
+              return Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: FilterChip(
+                  label: Text(status,
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : color,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                      )),
+                  selected: isSelected,
+                  onSelected: (val) {
+                    controller.updateApplicationStatusChart(
+                        selectedvalue: status);
+                  },
+                  selectedColor: Colors.blue.shade100,
+                  checkmarkColor: Colors.blue,
+                  labelStyle: TextStyle(
+                    color: isSelected ? Colors.blue.shade800 : Colors.black87,
+                    fontWeight:
+                        isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              );
+            }).toList(),
+          );
+        });
   }
 }
